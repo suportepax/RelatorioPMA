@@ -1,0 +1,45 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+	<div id='sumario'>
+		<p class="sub-titulo1 centro"> Sumário</p>
+		<ul class="lista">
+			<li>1. Introdução</li>
+			<li>2. Resumo do Atendimento</li>
+			<li>	
+				<ul>
+					<li>2.1 Indicadores do Atendimento</li>
+					<li>2.2 Chamados por Solicitante</li>
+					<li>2.3 Tipo de Chamados</li>
+					<li>2.4 Chamados em Aberto</li>
+					<li>2.5 Chamados Fechados</li>
+					<li>2.6 Chamados por Host</li>
+				</ul>
+			</li>
+			<li>3. Workload</li>
+			<li style="display: #{workloadBean.getTf(1,1) == null ? 'none' : 'list-item'}">
+				<ul>
+					<li>3.1 #{workloadBean.getLabelTitulo(1)}</li>
+					<li>3.2 #{workloadBean.getLabelTitulo(2)}</li>
+					<li>3.3 #{workloadBean.getLabelTitulo(3)}</li>
+					<li>3.4 #{workloadBean.getLabelTitulo(4)}</li>
+					<li>3.5 #{workloadBean.getLabelTitulo(5)}</li>
+					<li>3.6 #{workloadBean.getLabelTitulo(6)}</li>
+					<li>3.7 #{workloadBean.getLabelTitulo(7)}</li>
+					<li>3.8 #{workloadBean.getLabelTitulo(8)}</li>
+				</ul>
+			</li>
+			<li>4. Resumo de Paradas</li>
+			<li>
+				<ul>
+					<li>4.1 Paradas Evitadas (PE)</li>
+					<li>4.2 Paradas Não Programadas (PNP)</li>
+					<li>4.3 Paradas Programadas Estratégicas (PPE)</li>
+					<li>4.4 Paradas Programadas (PP)</li>
+					<li>4.5 Totais</li>
+				</ul>
+			</li>		
+		</ul>
+	</div>
+</ui:composition>
