@@ -7,26 +7,29 @@ import java.util.ArrayList;
 import java.util.List;
 
 import br.com.paxtecnologia.pma.relatorio.vo.GraficoMetricaVO;
+import br.com.paxtecnologia.pma.relatorio.vo.GraficoVO;
+import br.com.paxtecnologia.pma.relatorio.vo.HostVO;
+import br.com.paxtecnologia.pma.relatorio.vo.InstanciaVO;
 import br.com.paxtecnologia.pma.relatorio.vo.TimeFrameVO;
 import br.com.paxtecnologia.pma.relatorio.util.FormataDataUtil;
 
 public class WorkloadDAO {
 	private DataSourcePMA connection;
 
-	public GraficoMetricaVO getMetrica(Integer idCliente, Integer idGraficoControle, Integer idTf) {
+	public GraficoMetricaVO getMetrica(Integer idInstancia, Integer idGraficoControle, Integer idTf) {
 		GraficoMetricaVO retorno = new GraficoMetricaVO();
 		connection = new DataSourcePMA();
 		PreparedStatement pstmt;
 		String sql = "select t.metrica_link_id, "+
 				 	 "       t.tipo_horario_id "+
 				 	 "  from pmp_grafico g, pmp_time_frame t "+
-				 	 " where g.cliente_id = ? "+
+				 	 " where g.instancia_id = ? "+
 				 	 "   and g.grafico_controle_id = ? "+
 				 	 "   and t.time_frame_controle_id = ? "+
 				 	 "   and g.grafico_id = t.grafico_id";
 		pstmt = connection.getPreparedStatement(sql);
 		try {
-			pstmt.setInt(1, idCliente);
+			pstmt.setInt(1, idInstancia);
 			pstmt.setInt(2, idGraficoControle);
 			pstmt.setInt(3, idTf);
 		} catch (SQLException e) {
@@ -209,18 +212,18 @@ public class WorkloadDAO {
 		return timeFrame;
 	}		
 	
-	public String getLabel(Integer idCliente, Integer idGraficoControle, Integer idTf) {
+	public String getLegenda(Integer idInstancia, Integer idGraficoControle, Integer idTf) {
 		connection = new DataSourcePMA();
 		PreparedStatement pstmt;
 		String sql = "select t.legenda "+
 				     "  from pmp_grafico g, pmp_time_frame t "+
-				     " where g.cliente_id = ? "+
+				     " where g.instancia_id = ? "+
 				     "   and g.grafico_controle_id = ? "+
 				     "   and t.time_frame_controle_id = ? "+
 				     "   and g.grafico_id = t.grafico_id";
 		pstmt = connection.getPreparedStatement(sql);
 		try {
-			pstmt.setInt(1, idCliente);
+			pstmt.setInt(1, idInstancia);
 			pstmt.setInt(2, idGraficoControle);
 			pstmt.setInt(3, idTf);
 		} catch (SQLException e) {
@@ -228,45 +231,148 @@ public class WorkloadDAO {
 			e.printStackTrace();
 		}
 		ResultSet rs = connection.executaQuery(pstmt);
-		String label = null;
+		String legenda = null;
 		try {
 			while (rs.next()) {
-				label = rs.getString("legenda");
+				legenda = rs.getString("legenda");
 			}
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		connection.closeConnection(pstmt);
-		return label;
-	}	
-
-	public String getLabelTitulo(Integer idCliente, Integer idGraficoControle) {
+		return legenda;
+	}
+	
+	private List<GraficoVO> getGraficos(Integer idInstancia) {
+		List<GraficoVO> grafico = new ArrayList<GraficoVO>();
 		connection = new DataSourcePMA();
 		PreparedStatement pstmt;
-		String sql = "SELECT titulo "
-				+ "FROM pmp_grafico "
-				+ "WHERE cliente_id = ? "
-				+ "  and grafico_controle_id = ?";
+		String sql = "select titulo, "+
+					 "       descricao, "+
+					 "       mes_ano, "+
+					 "       tipo_calculo_id, "+
+					 "       grafico_controle_id "+
+					 "  from pmp_grafico "+
+					 " where instancia_id = ? "+
+					 " order by grafico_controle_id";
 		pstmt = connection.getPreparedStatement(sql);
 		try {
-			pstmt.setInt(1, idCliente);
-			pstmt.setInt(2, idGraficoControle);
+			pstmt.setInt(1, idInstancia);
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		ResultSet rs = connection.executaQuery(pstmt);
-		String labelTitulo = null;
+		GraficoVO temp;
 		try {
 			while (rs.next()) {
-				labelTitulo = rs.getString("titulo");
+				temp = new GraficoVO();
+				temp.setTitulo(rs.getString("titulo"));
+				temp.setDescricao(rs.getString("descricao"));
+				temp.setMesAno(rs.getInt("mes_ano"));
+				temp.setTipoCalculo(rs.getInt("tipo_calculo_id"));
+				temp.setControleId(rs.getInt("grafico_controle_id"));
+				grafico.add(temp);
 			}
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		connection.closeConnection(pstmt);
-		return labelTitulo;
+		return grafico;
+	}
+	
+	private List<InstanciaVO> getInstancias(Integer idCliente, Integer idHost) {
+		List<InstanciaVO> instancia = new ArrayList<InstanciaVO>();
+		connection = new DataSourcePMA();
+		PreparedStatement pstmt;
+		String sql = "select i.instancia, "+
+					 "       i.instancia_id, "+
+					 "		 i.descricao " +
+					 "  from pmp_host_ambiente a, "+
+					 "       pmp_host h, "+
+					 "       pmp_instancia i "+
+					 "where h.cliente_id = ? "+
+					 "  and h.host_id = ? "+
+					 "  and a.host_id=h.host_id "+
+					 "  and i.host_ambiente_id = a.host_ambiente_id "+
+					 "  and exists (select 1 from pmp_grafico g where g.instancia_id = i.instancia_id) " +
+					 "order by instancia_id";
+		pstmt = connection.getPreparedStatement(sql);
+		try {
+			pstmt.setInt(1, idCliente);
+			pstmt.setInt(2, idHost);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		ResultSet rs = connection.executaQuery(pstmt);
+		InstanciaVO temp;
+		try {
+			while (rs.next()) {
+				temp = new InstanciaVO();
+				temp.setInstancia(rs.getString("instancia"));
+				temp.setDescricao(rs.getString("descricao"));
+				temp.setId(rs.getInt("instancia_id"));
+				temp.setGraficoVO(getGraficos(temp.getId()));
+				instancia.add(temp);
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		connection.closeConnection(pstmt);
+		return instancia;
+	}	
+	
+	public List<HostVO> getHosts(Integer idCliente) {
+		List<HostVO> host = new ArrayList<HostVO>();
+		connection = new DataSourcePMA();
+		PreparedStatement pstmt;
+		String sql = "select h.nome_fantasia, "+
+					 "       h.host_id, " +
+					 "		 h.hostname, " +
+					 "		 h.tipo_cpu, " +
+					 "		 h.num_cpu, " +
+					 "		 h.qtd_memoria, " +
+					 "		 h.descricao "+
+					 "  from pmp_host h "+
+					 " where h.cliente_id= ? "+
+					 " and exists (select 1 from pmp_host_ambiente a, "+
+					 "                           pmp_instancia i, "+
+					 "                           pmp_grafico g "+
+					 "                     where a.host_id = h.host_id "+
+					 "                       and i.host_ambiente_id = a.host_ambiente_id "+
+					 "                       and i.instancia_id = g.instancia_id) " +
+					 " order by host_id";
+		pstmt = connection.getPreparedStatement(sql);
+		try {
+			pstmt.setInt(1, idCliente);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		ResultSet rs = connection.executaQuery(pstmt);
+		HostVO temp;
+		try {
+			while (rs.next()) {
+				temp = new HostVO();
+				temp.setHost(rs.getString("nome_fantasia"));
+				temp.setId(rs.getInt("host_id"));
+				temp.setDescricao(rs.getString("descricao"));
+				temp.setHostName(rs.getString("hostname"));
+				temp.setQuantidadeCPU(rs.getInt("num_cpu"));
+				temp.setQuantidadeMemoria(rs.getInt("qtd_memoria"));
+				temp.setTipoCPU(rs.getString("tipo_cpu"));
+				temp.setInstanciaVO(getInstancias(idCliente,temp.getId()));
+				host.add(temp);
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		connection.closeConnection(pstmt);
+		return host;
 	}	
 }

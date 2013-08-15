@@ -23,7 +23,7 @@
 			<f:selectItems value="#{clientesBean.listaMes}" var="i"
 				itemLabel="#{i.labelMes}" itemValue="#{i.mesString}" />
 		</h:selectOneMenu>
-		<h:commandButton id="reportButton" action="report" value="go" />
+		<h:commandButton id="reportButton" action="report" value="Executar" rendered="#{clientesBean.update}"/>
 	</h:form>
 </h:body>
 </html>

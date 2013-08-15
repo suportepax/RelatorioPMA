@@ -46,8 +46,8 @@ public class FormataDataUtil {
 		return dataFim;
 	}
 	
-	public static int diasNoMes(String mesRelatorio) {
-		int dia = 0;
+	public static Integer diasNoMes(String mesRelatorio) {
+		Integer dia = 0;
 		try {
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 			Calendar c = Calendar.getInstance();

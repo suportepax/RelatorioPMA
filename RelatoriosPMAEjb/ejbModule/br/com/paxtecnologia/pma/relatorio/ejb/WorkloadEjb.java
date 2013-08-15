@@ -4,36 +4,53 @@ import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import javax.ejb.Stateless;
 
 import br.com.paxtecnologia.pma.relatorio.dao.WorkloadDAO;
 import br.com.paxtecnologia.pma.relatorio.util.FormataDataUtil;
 import br.com.paxtecnologia.pma.relatorio.vo.GraficoMetricaVO;
+import br.com.paxtecnologia.pma.relatorio.vo.HostVO;
 import br.com.paxtecnologia.pma.relatorio.vo.TimeFrameVO;
 
 @Stateless
 public class WorkloadEjb {
 
 	private WorkloadDAO workloadDao = new WorkloadDAO();
+	private Map<String, Integer> controleIdCliente = new HashMap<String, Integer>();
+	private Map<String, String> controleMesCliente = new HashMap<String, String>();
+	private List<HostVO> hosts;
+	private Integer diasNoMes;
 	
-	public String getLabel(Integer idCliente, Integer idGraficoControle, Integer idTf) {
-		return workloadDao.getLabel(idCliente, idGraficoControle, idTf);
+	public String getLegenda(Integer idInstancia, Integer idGraficoControle, Integer idTf) {
+		return workloadDao.getLegenda(idInstancia, idGraficoControle, idTf);
 	}
 
-	public String getLabelTitulo(Integer idCliente, Integer idGraficoControle) {
-		return workloadDao.getLabelTitulo(idCliente, idGraficoControle);
+	public Integer getDiasNoMes(String mesRelatorio) {
+		if ((diasNoMes == null) ||
+			(controleMesCliente.get("getDiasNoMes") != mesRelatorio)) {
+			diasNoMes = FormataDataUtil.diasNoMes(mesRelatorio);
+			controleMesCliente.put("getDiasNoMes",mesRelatorio);
+		}
+		return diasNoMes;
 	}
 	
-	public int getDiasNoMes(String mesRelatorio) {
-		return FormataDataUtil.diasNoMes(mesRelatorio);
+	public List<HostVO> getHosts(Integer idCliente) {
+		if ((hosts == null) ||
+			(controleIdCliente.get("getHosts") != idCliente)) {
+			hosts = workloadDao.getHosts(idCliente);
+			controleIdCliente.put("getHosts",idCliente);
+		}
+		return hosts;
 	}
 
-	public String getTf(Integer idCliente, String mesRelatorio, Integer idGraficoControle, Integer idTf) {
+	public String getTf(Integer idInstancia, String mesRelatorio, Integer idGraficoControle, Integer idTf) {
 		String tf = null;
-		GraficoMetricaVO graficoMetrica = workloadDao.getMetrica(idCliente, idGraficoControle, idTf);
+		GraficoMetricaVO graficoMetrica = workloadDao.getMetrica(idInstancia, idGraficoControle, idTf);
 		Integer tipoHorario = graficoMetrica.getTipoHorario();
 		if (tipoHorario != null) {
 			switch (tipoHorario) {

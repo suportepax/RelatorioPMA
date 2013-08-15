@@ -3,7 +3,7 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets">
 	<div id='sumario'>
-		<p class="sub-titulo1 centro"> Sumário</p>
+		<p class="sub-titulo1 centro">Sumário</p>
 		<ul class="lista">
 			<li>1. Introdução</li>
 			<li>2. Resumo do Atendimento</li>
@@ -18,16 +18,23 @@
 				</ul>
 			</li>
 			<li>3. Workload</li>
-			<li style="display: #{workloadBean.getTf(1,1) == null ? 'none' : 'list-item'}">
+			<li style="display: #{workloadBean.hosts == null ? 'none' : 'list-item'}">
 				<ul>
-					<li>3.1 #{workloadBean.getLabelTitulo(1)}</li>
-					<li>3.2 #{workloadBean.getLabelTitulo(2)}</li>
-					<li>3.3 #{workloadBean.getLabelTitulo(3)}</li>
-					<li>3.4 #{workloadBean.getLabelTitulo(4)}</li>
-					<li>3.5 #{workloadBean.getLabelTitulo(5)}</li>
-					<li>3.6 #{workloadBean.getLabelTitulo(6)}</li>
-					<li>3.7 #{workloadBean.getLabelTitulo(7)}</li>
-					<li>3.8 #{workloadBean.getLabelTitulo(8)}</li>
+					<ui:repeat value="#{workloadBean.hosts}" var="h" varStatus="statusHost">
+					<li>3.#{statusHost.index+1} Host: #{h.host}
+						<ul>
+							<ui:repeat value="#{h.instanciaVO}" var="i" varStatus="statusInstancia">
+							<li>3.#{statusHost.index+1}.#{statusInstancia.index+1} Instância: #{i.instancia}
+								<ul>
+									<ui:repeat value="#{i.graficoVO}" var="g" varStatus="statusGrafico">
+									<li>3.#{statusHost.index+1}.#{statusInstancia.index+1}.#{statusGrafico.index+1} #{g.titulo}</li>
+									</ui:repeat>
+								</ul>
+							</li>
+							</ui:repeat>
+						</ul>
+					</li>
+					</ui:repeat>
 				</ul>
 			</li>
 			<li>4. Resumo de Paradas</li>

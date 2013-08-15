@@ -4,649 +4,273 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets">
 	<div id='workload' class="quebrapagina">
 		<p class="sub-titulo1">3 WorkLoad</p>
+		<h:outputText value="Não há dados coletados." rendered="#{empty workloadBean.hosts}" />
 		<h:outputScript library="js" name="jquery.js" target="head" />
 		<h:outputScript library="js" name="jquery.flot.js" target="head" />
 		<h:outputScript library="js" name="jquery.flot.orderBars.js"
 			target="head" />
-
-		<script type="text/javascript">
-					//<![CDATA[
-$(function () {
-    var previousPoint;
-
-  	d1 = #{workloadBean.getTf(1,1)};
-   	d2 = #{workloadBean.getTf(1,2)};
-   	d3 = #{workloadBean.getTf(1,3)};
-
-    var ds = new Array();
-    
-    var options = {
-            legend:{         
-                container:$("#principalXtimeframe_mes-legenda"),
-                noColumns:3,
-            },
-            grid:{
-                hoverable:true,
-            },
-            xaxis: {
-            	min: 0.5,
-            	max: #{workloadBean.getDiasNoMes()}.5,
-            	ticks: #{workloadBean.getDiasNoMes()},
-            	tickDecimals: 0,
-            	autoscaleMargin: 100
-            },
-            yaxis: {           
-            	tickDecimals: 0
-
-            },
-            bars:{
-            	align: "center" // or "center"
-            	}
-    }
-    
-    ds.push({
-     	label: "#{workloadBean.getLabel(1,1)}", 
-		color: "#191970",
-        data:d1,
-        bars: {
-            show: true, 
-            lineWidth: 2, 
-            barWidth: 0.05,  
-            order: 1,
-        }
-    });
-    ds.push({
-     	label: "#{workloadBean.getLabel(1,2)}", 
-		color: "#CD3333",
-        data:d2,
-        bars: {
-            show: true, 
-            lineWidth: 2, 
-            barWidth: 0.05,  
-            order: 2
-        }
-    });
-    ds.push({
-     	label: "#{workloadBean.getLabel(1,3)}", 
-    	color: "#4F94CD",
-        data:d3,
-        bars: {
-            show: true, 
-            lineWidth: 2, 
-            barWidth: 0.05,  
-            order: 3
-        }
-    });     
-                
-    //Display graph
-    $.plot($("#principalXtimeframe_mes-grafico"), ds, options);
-
-});
-
-//]]> 
-</script>
-
-
-<script type="text/javascript">
-					//<![CDATA[
-
-$(function () {
-    var previousPoint;
-
-    d1 = #{workloadBean.getTf(2,1)};
-   	d2 = #{workloadBean.getTf(2,2)};
-   	d3 = #{workloadBean.getTf(2,3)};
-    
-    var ds = new Array();
-
-    var options = {
-            legend:{         
-                container:$("#principalXtimeframe_ano-legenda"),
-                noColumns:3,
-            },
-            xaxis: {
-            	mode: "time",
-            	minTickSize: [1, "month"]
-            },
-            yaxis: {           
-            	tickDecimals: 0
-
-            },
-            bars:{
-            	align: "center"
-            	}
-    }
-    
-    ds.push({
-     	label: "#{workloadBean.getLabel(2,1)}", 
-        color: "#191970",
-        data:d1,
-        bars: {
-            show: true, 
-            lineWidth: 18, 
-            order: 1,
-        }
-    });
-    ds.push({
-     	label: "#{workloadBean.getLabel(2,2)}", 
-		color: "#CD3333",
-        data:d2,
-        bars: {
-            show: true, 
-            lineWidth: 8, 
-            order: 2
-        }
-    });
-    ds.push({
-     	label: "#{workloadBean.getLabel(2,3)}", 
-    	color: "#4F94CD",
-        data:d3,
-        bars: {
-            show: true, 
-            lineWidth: 5, 
-            order: 3
-        }
-    });     
-      
-
-    //Display graph
-    $.plot($("#principalXtimeframe_ano-grafico"), ds, options);
-
-});
-
-//]]> 
-</script>
-
-<script type="text/javascript">
-					//<![CDATA[
-
-$(function () {
-    var previousPoint;
-
-    d1 = #{workloadBean.getTf(3,1)};
-   	d2 = #{workloadBean.getTf(3,2)};
-   	d3 = #{workloadBean.getTf(3,3)};
- 
-    var ds = new Array();
-
-    var options = {
-            legend:{         
-                container:$("#outrostimeframe_mes-legenda"),
-                noColumns:3,
-            },
-            grid:{
-                hoverable:true,
-            },
-            xaxis: {
-            	min: 0.5,
-            	max: #{workloadBean.getDiasNoMes()}.5,
-            	ticks: #{workloadBean.getDiasNoMes()},
-            	tickDecimals: 0,
-            	autoscaleMargin: 100
-            },
-            yaxis: {           
-            	tickDecimals: 0
-
-            },
-            bars:{
-            	align: "center" // or "center"
-            	}
-    }
-    
-    ds.push({
-     	label: "#{workloadBean.getLabel(3,1)}", 
-        color: "#191970",
-        data:d1,
-        bars: {
-            show: true, 
-            lineWidth: 2, 
-            barWidth: 0.05,  
-            order: 1,
-        }
-    });
-    ds.push({
-     	label: "#{workloadBean.getLabel(3,2)}", 
-		color: "#CD3333",
-        data:d2,
-        bars: {
-            show: true, 
-            lineWidth: 2, 
-            barWidth: 0.05,  
-            order: 2
-        }
-    });
-    ds.push({
-     	label: "#{workloadBean.getLabel(3,3)}",
-    	color: "#4F94CD",
-        data:d3,
-        bars: {
-            show: true, 
-            lineWidth: 2, 
-            barWidth: 0.05,  
-            order: 3
-        }
-    });     
-                
-  //Display graph
-    $.plot($("#outrostimeframe_mes-grafico"), ds, options);
-  
-});
-
-//]]> 
-</script>
-
-<script type="text/javascript">
-					//<![CDATA[
-
-$(function () {
-    var previousPoint;
-
-    d1 = #{workloadBean.getTf(4,1)};
-   	d2 = #{workloadBean.getTf(4,2)};
-   	d3 = #{workloadBean.getTf(4,3)};
- 
-    var ds = new Array();
-
-    var options = {
-            legend:{         
-                container:$("#outrostimeframe_ano-legenda"),
-                noColumns:3,
-            },
-            xaxis: {
-            	mode: "time",
-            	minTickSize: [1, "month"]
-            },
-            yaxis: {           
-            	tickDecimals: 0
-
-            },
-            bars:{
-            	align: "center" // or "center"
-            	}
-    }
-    
-    ds.push({
-     	label: "#{workloadBean.getLabel(4,1)}", 
-        color: "#191970",
-        data:d1,
-        bars: {
-            show: true, 
-            lineWidth: 18, 
-            order: 1,
-        }
-    });
-    ds.push({
-     	label: "#{workloadBean.getLabel(4,2)}",
-    	color: "#CD3333",
-        data:d2,
-        bars: {
-            show: true, 
-            lineWidth: 8, 
-            order: 2
-        }
-    });
-    ds.push({
-     	label: "#{workloadBean.getLabel(4,3)}",
-     	color: "#4F94CD",
-        data:d3,
-        bars: {
-            show: true, 
-            lineWidth: 5, 
-            order: 3
-        }
-    });     
-  
-                
-  //Display graph
-    $.plot($("#outrostimeframe_ano-grafico"), ds, options);
-
-});
-
-//]]> 
-</script>
-
-<script type="text/javascript">
-					//<![CDATA[
-
-$(function () {
-    var previousPoint;
-
-    d1 = #{workloadBean.getTf(5,1)};
-   	d2 = #{workloadBean.getTf(5,2)};
- 
-    var ds = new Array();
-
-    var options = {
-            legend:{         
-                container:$("#princapaloutros_tudo_mes-legenda"),
-                noColumns:3,
-            },
-            grid:{
-                hoverable:true,
-            },
-            xaxis: {
-            	min: 0.5,
-            	max: #{workloadBean.getDiasNoMes()}.5,
-            	ticks: #{workloadBean.getDiasNoMes()},
-            	tickDecimals: 0,
-            	autoscaleMargin: 100
-            },
-            yaxis: {           
-            	tickDecimals: 0
-
-            },
-            bars:{
-            	align: "center" // or "center"
-            	}
-    }
-    
-    ds.push({
-     	label: "#{workloadBean.getLabel(5,1)}",
-     	color: "#191970",
-        data:d1,
-        bars: {
-            show: true, 
-            lineWidth: 2, 
-            barWidth: 0.05,  
-            order: 1,
-        }
-    });
-    ds.push({
-     	label: "#{workloadBean.getLabel(5,2)}",
-     	color: "#CD3333",
-        data:d2,
-        bars: {
-            show: true, 
-            lineWidth: 2, 
-            barWidth: 0.05,  
-            order: 2
-        }
-    });
- 
-  //Display graph
-    $.plot($("#princapaloutros_tudo_mes-grafico"), ds, options);
- 
-});
-
-//]]> 
-</script>
-
-<script type="text/javascript">
-					//<![CDATA[
-
-$(function () {
-    var previousPoint;
-
-    d1 = #{workloadBean.getTf(6,1)};
-   	d2 = #{workloadBean.getTf(6,2)};
- 
-    var ds = new Array();
-
-    var options = {
-            legend:{         
-                container:$("#princapaloutros_tudo_ano-legenda"),
-                noColumns:3,
-            },
-            xaxis: {
-            	mode: "time",
-            	minTickSize: [1, "month"]
-            },
-            yaxis: {           
-            	tickDecimals: 0
-            },
-            bars:{
-            	align: "center" // or "center"
-            	}
-    }
-    
-    ds.push({
-     	label: "#{workloadBean.getLabel(6,1)}", 
-		color: "#191970",
-        data:d1,
-        bars: {
-            show: true, 
-            lineWidth: 12, 
-            order: 1,
-        }
-    });
-    ds.push({
-     	label: "#{workloadBean.getLabel(6,2)}", 
-		color: "#CD3333",
-        data:d2,
-        bars: {
-            show: true, 
-            lineWidth: 8, 
-            order: 2
-        }
-    });
-               
-  //Display graph
-    $.plot($("#princapaloutros_tudo_ano-grafico"), ds, options);
-
-});
-
-//]]> 
-</script>
-
-<script type="text/javascript">
-					//<![CDATA[
-
-$(function () {
-    var previousPoint;
-
-    d1 = #{workloadBean.getTf(7,1)};
-   	d2 = #{workloadBean.getTf(7,2)};
- 
-    var ds = new Array();
-
-    var options = {
-            legend:{         
-                container:$("#princapaloutros_comercial_mes-legenda"),
-                noColumns:3,
-            },
-            grid:{
-                hoverable:true,
-            },
-            xaxis: {
-            	min: 0.5,
-            	max: #{workloadBean.getDiasNoMes()}.5,
-            	ticks: #{workloadBean.getDiasNoMes()},
-            	tickDecimals: 0,
-            	autoscaleMargin: 100
-            },
-            yaxis: {           
-            	tickDecimals: 0
-
-            },
-            bars:{
-            	align: "center" // or "center"
-            	}
-    }
-    
-    ds.push({
-     	label: "#{workloadBean.getLabel(7,1)}", 
-        color: "#191970",
-        data:d1,
-        bars: {
-            show: true, 
-            lineWidth: 2, 
-            barWidth: 0.05,  
-            order: 1,
-        }
-    });
-    ds.push({
-     	label: "#{workloadBean.getLabel(7,2)}", 
-		color: "#CD3333",
-        data:d2,
-        bars: {
-            show: true, 
-            lineWidth: 2, 
-            barWidth: 0.05,  
-            order: 2
-        }
-    });
-
-  //Display graph
-    $.plot($("#princapaloutros_comercial_mes-grafico"), ds, options);
-
-});
-
-//]]> 
-</script>
-
-<script type="text/javascript">
-					//<![CDATA[
-
-$(function () {
-    var previousPoint;
-
-    d1 = #{workloadBean.getTf(8,1)};
-   	d2 = #{workloadBean.getTf(8,2)};
- 
-    var ds = new Array();
-
-    var options = {
-            legend:{         
-                container:$("#princapaloutros_comercial_ano-legenda"),
-                noColumns:3,
-            },
-            grid:{
-                hoverable:true,
-            },
-            xaxis: {
-            	mode: "time",
-            	minTickSize: [1, "month"]
-            },
-            yaxis: {           
-            	tickDecimals: 0
-
-            },
-            bars:{
-            	align: "center" // or "center"
-            	}
-    }
-    
-    ds.push({
-     	label: "#{workloadBean.getLabel(8,1)}", 
-		color: "#191970",
-        data:d1,
-        bars: {
-            show: true, 
-            lineWidth: 12, 
-            order: 1,
-        }
-    });
-    ds.push({
-     	label: "#{workloadBean.getLabel(8,2)}",
-     	color: "#CD3333",
-        data:d2,
-        bars: {
-            show: true, 
-            lineWidth: 8, 
-            order: 2
-        }
-    });
- 
-  //Display graph
-    $.plot($("#princapaloutros_comercial_ano-grafico"), ds, options);
-
-});
-
-//]]> 
-</script>
-
-		<div id='principaltimeframe'>
-			<p class="sub-titulo2">3.1 #{workloadBean.getLabelTitulo(1)}</p>
-			<h:outputText
-				value="O gráfico abaixo representa o workload através das sessões no database Oracle para o owner “#{workloadBean.getLabelTitulo(1)}” através de 3 distintos time frames." />
-			<br />
-			<h:outputText value="Mês corrente:" />
-			<br />
-			<div id="principalXtimeframe_mes">
-				<div id="principalXtimeframe_mes-grafico" class="graph-gnd"></div>
-				<div align="center">
-					<div id="principalXtimeframe_mes-legenda"></div>
-				</div>
-			</div>
-			<br />
-			<p class="sub-titulo2">3.2 #{workloadBean.getLabelTitulo(2)}</p>
-			<br />
-			<div id="principalXtimeframe_ano">
-				<div id="principalXtimeframe_ano-grafico" class="graph-gnd "></div>
-				<div align="center">
-					<div id="principalXtimeframe_ano-legenda"></div>
-				</div>
-			</div>
-		</div>
-		<div id='outrostimeframe'>
-			<p class="sub-titulo2">3.3 #{workloadBean.getLabelTitulo(3)}</p>
-			<h:outputText
-				value="O gráfico abaixo representa o workload através das sessões no database Oracle para os owners “#{workloadBean.getLabelTitulo(3)}”, ou seja, todos os demais, através de 3 distintos time frames." />
-			<br />
-			<h:outputText value="Mês corrente:" />
-			<br />
-			<div id="outrostimeframe_mes">
-				<div id="outrostimeframe_mes-grafico" class="graph-gnd"></div>
-				<div align="center">
-					<div id="outrostimeframe_mes-legenda"></div>
-				</div>
-			</div>
-			<br />
-			<p class="sub-titulo2">3.4 #{workloadBean.getLabelTitulo(4)}</p>
-			<br />
-			<div id="outrostimeframe_ano">
-				<div id="outrostimeframe_ano-grafico" class="graph-gnd"></div>
-				<div align="center">
-					<div id="outrostimeframe_ano-legenda"></div>
-				</div>
-			</div>
-		</div>
-		<div id='princapaloutros_tudo'>
-			<p class="sub-titulo2">3.5 #{workloadBean.getLabelTitulo(5)}</p>
-			<h:outputText
-				value="O gráfico abaixo compara o workload através das sessões no database Oracle do owner “#{workloadBean.getLabel(5,1)}” contra os owners “#{workloadBean.getLabel(5,2)}” para o time frame 24 horas." />
-			<br />
-			<h:outputText value="Mês corrente:" />
-			<br />
-			<div id="princapaloutros_tudo_mes">
-				<div id="princapaloutros_tudo_mes-grafico" class="graph-gnd"></div>
-				<div align="center">
-					<div id="princapaloutros_tudo_mes-legenda"></div>
-				</div>
-			</div>
-			<br />
-			<p class="sub-titulo2">3.6 #{workloadBean.getLabelTitulo(6)}</p>
-			<br />
-			<div id="princapaloutros_tudo_ano">
-				<div id="princapaloutros_tudo_ano-grafico" class="graph-gnd"></div>
-				<div align="center">
-					<div id="princapaloutros_tudo_ano-legenda"></div>
-				</div>
-			</div>
-		</div>
-		<div id='princapaloutros_comercial'>
-			<p class="sub-titulo2">3.7 #{workloadBean.getLabelTitulo(7)}</p>
-			<h:outputText
-				value="O gráfico abaixo compara o workload através das sessões no database Oracle do owner “#{workloadBean.getLabel(7,1)}” contra os owners “#{workloadBean.getLabel(7,2)}” para o time frame horário comercial (8-18)." />
-			<br />
-			<h:outputText value="Mês corrente:" />
-			<br />
-			<div id="princapaloutros_comercial_mes">
-				<div id="princapaloutros_comercial_mes-grafico" class="graph-gnd"></div>
-				<div align="center">
-					<div id="princapaloutros_comercial_mes-legenda"></div>
-				</div>
-			</div>
-			<br />
-			<p class="sub-titulo2">3.8 #{workloadBean.getLabelTitulo(8)}</p>
-			<br />
-			<div id="princapaloutros_comercial_mes">
-				<div id="princapaloutros_comercial_ano-grafico" class="graph-gnd"></div>
-				<div align="center">
-					<div id="princapaloutros_comercial_ano-legenda"></div>
-				</div>
-			</div>
-		</div>
+			
+		<ui:repeat value="#{workloadBean.hosts}" var="h" varStatus="statusHost">
+			<div>
+				<p class="sub-titulo2">3.#{statusHost.index+1} Host: #{h.host}</p>
+			</div> 
+			<ui:repeat value="#{h.instanciaVO}" var="i" varStatus="statusInstancia">
+				<div>
+					<p class="sub-titulo2">3.#{statusHost.index+1}.#{statusInstancia.index+1} Instância: #{i.instancia}</p>
+				</div> 
+				<ui:repeat value="#{i.graficoVO}" var="g" varStatus="statusGrafico">
+			  		<h:outputScript rendered="#{g.mesAno == 1 and g.tipoCalculo == 1}">
+						//Grafico mensal
+						$(function () {
+						    var previousPoint;
+						  	d1 = #{workloadBean.getTf(i.id,g.controleId,1)};
+						   	d2 = #{workloadBean.getTf(i.id,g.controleId,2)};
+						   	d3 = #{workloadBean.getTf(i.id,g.controleId,3)};
+						    var ds = new Array();
+						    var options = {
+						            legend:{         
+						                container:$("##{g.controleId}#{g.tipoCalculo}-legenda"),
+						                noColumns:3,
+						            },
+						            grid:{
+						                hoverable:true,
+						            },
+						            xaxis: {
+						            	min: 0.5,
+						            	max: #{workloadBean.diasNoMes}.5,
+						            	ticks: #{workloadBean.diasNoMes},
+						            	tickDecimals: 0,
+						            	autoscaleMargin: 100
+						            },
+						            yaxis: {           
+						            	tickDecimals: 0
+						            },
+						            bars:{
+						            	align: "center" // or "center"
+						            	}
+						    }
+						    
+						    ds.push({
+						     	label: "#{workloadBean.getLegenda(i.id,g.controleId,1)}", 
+								color: "#191970",
+						        data:d1,
+						        bars: {
+						            show: true, 
+						            lineWidth: 2, 
+						            barWidth: 0.05,  
+						            order: 1,
+						        }
+						    });
+						    ds.push({
+						     	label: "#{workloadBean.getLegenda(i.id,g.controleId,2)}", 
+								color: "#CD3333",
+						        data:d2,
+						        bars: {
+						            show: true, 
+						            lineWidth: 2, 
+						            barWidth: 0.05,  
+						            order: 2
+						        }
+						    });
+						    ds.push({
+						     	label: "#{workloadBean.getLegenda(i.id,g.controleId,3)}", 
+						    	color: "#4F94CD",
+						        data:d3,
+						        bars: {
+						            show: true, 
+						            lineWidth: 2, 
+						            barWidth: 0.05,  
+						            order: 3
+						        }
+						    });     
+						    //Display graph
+						    $.plot($("##{g.controleId}#{g.tipoCalculo}-grafico"), ds, options);
+						
+						});  		
+			  		</h:outputScript>
+					<h:outputScript rendered="#{g.mesAno == 1 and g.tipoCalculo == 2}">
+						//Grafico mensal com duas metricas apenas
+						$(function () {
+						    var previousPoint;
+						  	d1 = #{workloadBean.getTf(i.id,g.controleId,1)};
+						   	d2 = #{workloadBean.getTf(i.id,g.controleId,2)};
+						    var ds = new Array();
+						    var options = {
+						            legend:{         
+						                container:$("##{g.controleId}#{g.tipoCalculo}-legenda"),
+						                noColumns:3,
+						            },
+						            grid:{
+						                hoverable:true,
+						            },
+						            xaxis: {
+						            	min: 0.5,
+						            	max: #{workloadBean.diasNoMes}.5,
+						            	ticks: #{workloadBean.diasNoMes},
+						            	tickDecimals: 0,
+						            	autoscaleMargin: 100
+						            },
+						            yaxis: {           
+						            	tickDecimals: 0
+						
+						            },
+						            bars:{
+						            	align: "center" // or "center"
+						            	}
+						    }
+						    
+						    ds.push({
+						     	label: "#{workloadBean.getLegenda(i.id,g.controleId,1)}", 
+								color: "#191970",
+						        data:d1,
+						        bars: {
+						            show: true, 
+						            lineWidth: 2, 
+						            barWidth: 0.05,  
+						            order: 1,
+						        }
+						    });
+						    ds.push({
+						     	label: "#{workloadBean.getLegenda(i.id,g.controleId,2)}", 
+								color: "#CD3333",
+						        data:d2,
+						        bars: {
+						            show: true, 
+						            lineWidth: 2, 
+						            barWidth: 0.05,  
+						            order: 2
+						        }
+						    });
+						    //Display graph
+						    $.plot($("##{g.controleId}#{g.tipoCalculo}-grafico"), ds, options);
+						
+						});  		
+			  		</h:outputScript>
+			  		<h:outputScript rendered="#{g.mesAno == 2 and g.tipoCalculo == 1}">
+						//Grafico anual
+						$(function () {
+						    var previousPoint;
+						    d1 = #{workloadBean.getTf(i.id,g.controleId,1)};
+						   	d2 = #{workloadBean.getTf(i.id,g.controleId,2)};
+						   	d3 = #{workloadBean.getTf(i.id,g.controleId,3)};
+						    var ds = new Array();
+						    var options = {
+						            legend:{         
+						                container:$("##{g.controleId}#{g.tipoCalculo}-legenda"),
+						                noColumns:3,
+						            },
+						            xaxis: {
+						            	mode: "time",
+						            	minTickSize: [1, "month"]
+						            },
+						            yaxis: {           
+						            	tickDecimals: 0
+						
+						            },
+						            bars:{
+						            	align: "center"
+						            	}
+						    }
+						    
+						    ds.push({
+						     	label: "#{workloadBean.getLegenda(i.id,g.controleId,1)}", 
+						        color: "#191970",
+						        data:d1,
+						        bars: {
+						            show: true, 
+						            lineWidth: 18, 
+						            order: 1,
+						        }
+						    });
+						    ds.push({
+						     	label: "#{workloadBean.getLegenda(i.id,g.controleId,2)}", 
+								color: "#CD3333",
+						        data:d2,
+						        bars: {
+						            show: true, 
+						            lineWidth: 8, 
+						            order: 2
+						        }
+						    });
+						    ds.push({
+						     	label: "#{workloadBean.getLegenda(i.id,g.controleId,3)}", 
+						    	color: "#4F94CD",
+						        data:d3,
+						        bars: {
+						            show: true, 
+						            lineWidth: 5, 
+						            order: 3
+						        }
+						    });     
+						    //Display graph
+						    $.plot($("##{g.controleId}#{g.tipoCalculo}-grafico"), ds, options);
+						
+						});  		
+			  		</h:outputScript>
+					<h:outputScript rendered="#{g.mesAno == 2 and g.tipoCalculo == 2}">
+						//Grafico anual com duas metricas apenas
+						$(function () {
+						    var previousPoint;
+						    d1 = #{workloadBean.getTf(i.id,g.controleId,1)};
+						   	d2 = #{workloadBean.getTf(i.id,g.controleId,2)};
+						    var ds = new Array();
+						    var options = {
+						            legend:{         
+						                container:$("##{g.controleId}#{g.tipoCalculo}-legenda"),
+						                noColumns:3,
+						            },
+						            xaxis: {
+						            	mode: "time",
+						            	minTickSize: [1, "month"]
+						            },
+						            yaxis: {           
+						            	tickDecimals: 0
+						
+						            },
+						            bars:{
+						            	align: "center"
+						            	}
+						    }
+						    
+						    ds.push({
+						     	label: "#{workloadBean.getLegenda(i.id,g.controleId,1)}", 
+						        color: "#191970",
+						        data:d1,
+						        bars: {
+						            show: true, 
+						            lineWidth: 12, 
+						            order: 1,
+						        }
+						    });
+						    ds.push({
+						     	label: "#{workloadBean.getLegenda(i.id,g.controleId,2)}", 
+								color: "#CD3333",
+						        data:d2,
+						        bars: {
+						            show: true, 
+						            lineWidth: 8, 
+						            order: 2
+						        }
+						    });
+						    //Display graph
+						    $.plot($("##{g.controleId}#{g.tipoCalculo}-grafico"), ds, options);
+						});  		
+			  		</h:outputScript>  		
+					<div>
+						<p class="sub-titulo2">3.#{statusHost.index+1}.#{statusInstancia.index+1}.#{statusGrafico.index+1} #{g.titulo}</p>
+						<h:outputText value="#{g.descricao}" />
+						<br />
+						<h:outputText value="Mês corrente:" rendered="#{g.mesAno == 1}"/>
+						<div>
+							<div id="#{g.controleId}#{g.tipoCalculo}-grafico" class="graph-gnd"></div>
+							<div align="center">
+								<div id="#{g.controleId}#{g.tipoCalculo}-legenda"></div>
+							</div>
+						</div>
+					</div>  		
+				</ui:repeat>
+			</ui:repeat>
+		</ui:repeat>		
 	</div>
 
 </ui:composition>

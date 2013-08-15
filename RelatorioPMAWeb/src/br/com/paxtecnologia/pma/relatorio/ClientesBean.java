@@ -82,5 +82,9 @@ public class ClientesBean {
 	public void setListaMes(List<MesRelatorioVO> listaMes) {
 		this.listaMes = listaMes;
 	}
+	
+	public void mesChanged(ValueChangeEvent e){
+		
+	}
 
 }
