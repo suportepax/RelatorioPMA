@@ -95,7 +95,7 @@ public class WorkloadDAO {
 				+ "WHERE data between ? and ? "
 				+ "AND metrica_link_id = ? "
 				+ "GROUP BY to_char(data, 'mm/yyyy') "
-				+ "ORDER BY data";
+				+ "ORDER BY to_date(data, 'mm/yyyy')";
 		pstmt = connection.getPreparedStatement(sql);
 		try {
 			pstmt.setDate(1, FormataDataUtil.formataAnoInicio(mesRelatorio));
@@ -181,7 +181,7 @@ public class WorkloadDAO {
 				+ "WHERE data between ? and ? "
 				+ "AND metrica_link_id = ? "
 				+ "AND hora in (" + builder.deleteCharAt( builder.length() -1 ).toString() + ") "
-				+ "GROUP BY to_char(data, 'mm/yyyy') ORDER BY data";
+				+ "GROUP BY to_char(data, 'mm/yyyy') ORDER BY to_date(data, 'mm/yyyy')";
 		pstmt = connection.getPreparedStatement(sql);
 		try {
 			pstmt.setDate(1, FormataDataUtil.formataAnoInicio(mesRelatorio));
