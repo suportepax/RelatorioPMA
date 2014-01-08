@@ -63,7 +63,7 @@ public class WorkloadDAO {
 		pstmt = connection.getPreparedStatement(sql);
 		try {
 			pstmt.setDate(1, FormataDataUtil.formataDataInicio(mesRelatorio));
-			pstmt.setDate(2, FormataDataUtil.formataDataFim(mesRelatorio));
+			pstmt.setDate(2, FormataDataUtil.formataDataFim_dia(mesRelatorio));
 			pstmt.setInt(3, metrica);
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -140,7 +140,7 @@ public class WorkloadDAO {
 		pstmt = connection.getPreparedStatement(sql);
 		try {
 			pstmt.setDate(1, FormataDataUtil.formataDataInicio(mesRelatorio));
-			pstmt.setDate(2, FormataDataUtil.formataDataFim(mesRelatorio));
+			pstmt.setDate(2, FormataDataUtil.formataDataFim_dia(mesRelatorio));
 			pstmt.setInt(3, metrica);
 			int index = 4;
 			for( String o : possibleValues ) {

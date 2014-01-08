@@ -13,7 +13,7 @@ public class FormataDataUtil {
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 			Calendar c = Calendar.getInstance();
 			c.setTime(sdf.parse(mesRelatorio));
-			c.add(Calendar.YEAR, -1);
+			c.add(Calendar.MONTH, -11);
 			anoInicio = new Date(sdf.parse(sdf.format(c.getTime())).getTime());
 		} catch (ParseException e) {
 			e.printStackTrace();
@@ -33,6 +33,20 @@ public class FormataDataUtil {
 	}
 	
 	public static Date formataDataFim(String mesRelatorio) {
+		Date dataFim = null;
+		try {
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+			Calendar c = Calendar.getInstance();
+			c.setTime(sdf.parse(mesRelatorio));
+			//c.add(Calendar.MONTH, 1);
+			dataFim = new Date((sdf.parse(sdf.format(c.getTime())).getTime()));
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		return dataFim;
+	}
+	
+	public static Date formataDataFim_dia(String mesRelatorio) {
 		Date dataFim = null;
 		try {
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");

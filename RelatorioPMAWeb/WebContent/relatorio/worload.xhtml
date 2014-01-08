@@ -161,14 +161,15 @@
 						            },
 						            xaxis: {
 						            	mode: "time",
-						            	minTickSize: [1, "month"]
+						            	minTickSize: [1, "month"],
+        								timeformat: "%b %y"
 						            },
 						            yaxis: {           
 						            	tickDecimals: 0
 						
 						            },
 						            bars:{
-						            	align: "center"
+  										align: "center"
 						            	}
 						    }
 						    
@@ -178,7 +179,8 @@
 						        data:d1,
 						        bars: {
 						            show: true, 
-						            lineWidth: 18, 
+						            lineWidth: 6, 
+						            barWidth: 0.05, 
 						            order: 1,
 						        }
 						    });
@@ -188,7 +190,8 @@
 						        data:d2,
 						        bars: {
 						            show: true, 
-						            lineWidth: 8, 
+						            lineWidth: 6, 
+						             barWidth: 0.05, 
 						            order: 2
 						        }
 						    });
@@ -198,7 +201,8 @@
 						        data:d3,
 						        bars: {
 						            show: true, 
-						            lineWidth: 5, 
+						            lineWidth: 6, 
+						             barWidth: 0.05, 
 						            order: 3
 						        }
 						    });     
@@ -221,7 +225,8 @@
 						            },
 						            xaxis: {
 						            	mode: "time",
-						            	minTickSize: [1, "month"]
+						            	minTickSize: [1, "month"],
+        								timeformat: "%b %y"
 						            },
 						            yaxis: {           
 						            	tickDecimals: 0
@@ -238,7 +243,7 @@
 						        data:d1,
 						        bars: {
 						            show: true, 
-						            lineWidth: 12, 
+						            lineWidth: 6, 
 						            order: 1,
 						        }
 						    });
@@ -248,7 +253,7 @@
 						        data:d2,
 						        bars: {
 						            show: true, 
-						            lineWidth: 8, 
+						            lineWidth: 6, 
 						            order: 2
 						        }
 						    });
