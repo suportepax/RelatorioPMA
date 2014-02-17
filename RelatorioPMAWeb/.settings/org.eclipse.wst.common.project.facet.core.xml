@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <faceted-project>
-  <runtime name="PAX"/>
+  <runtime name="jboss-as-7.1.1.Final Runtime"/>
   <fixed facet="jst.web"/>
   <fixed facet="java"/>
   <fixed facet="wst.jsdt.web"/>

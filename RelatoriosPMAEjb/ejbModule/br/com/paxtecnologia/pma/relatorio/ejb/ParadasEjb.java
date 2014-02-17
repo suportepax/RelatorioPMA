@@ -54,7 +54,7 @@ public class ParadasEjb {
 			Calendar gc = paradasDao.getDataUltimoPNP(idCliente, mesRelatorio);
 			
 			Calendar calendar = Calendar.getInstance();
-			calendar.set(Integer.parseInt(mesRelatorio.substring(0,4)), (Integer.parseInt(mesRelatorio.substring(5,7))-1), Integer.parseInt(mesRelatorio.substring(9,10)),0,0,0);
+			calendar.set(Integer.parseInt(mesRelatorio.substring(0,4)), (Integer.parseInt(mesRelatorio.substring(6,7))-1), Integer.parseInt(mesRelatorio.substring(9,10)),0,0,0);
 			int lastDate = calendar.getActualMaximum(Calendar.DAY_OF_MONTH);
 		    calendar.set(Calendar.DAY_OF_MONTH, lastDate);
 		    
@@ -231,7 +231,7 @@ public class ParadasEjb {
 		if (listaParadasEvitadasMes == null || listaParadasEvitadasMes.size() == 0 || controleIdCliente.get("getListaParadasEvitadasMes") != idCliente
 				|| (controleIdCliente.get("getListaParadasEvitadasMes") == idCliente
 				   && controleMesCliente.get("mesCliente") != mesRelatorio)) {
-			DateTime data = new DateTime(Integer.parseInt(mesRelatorio.substring(0,4)), Integer.parseInt(mesRelatorio.substring(5,7)), Integer.parseInt(mesRelatorio.substring(9,10)),0,0,0);
+			DateTime data = new DateTime(Integer.parseInt(mesRelatorio.substring(0,4)), Integer.parseInt(mesRelatorio.substring(6,7)), Integer.parseInt(mesRelatorio.substring(9,10)),0,0,0);
 			listaParadasEvitadasMes = new ArrayList<ParadasPorTipoVO>();
 			for(ParadasPorTipoVO paradasPorTipoVO:getListaParadasEvitadas(idCliente, mesRelatorio, tipo)){
 				//Verifica se a data pertence ao mes do parametro mesRelatorio
@@ -262,7 +262,7 @@ public class ParadasEjb {
 		if (listaParadasNaoProgramadasMes == null || listaParadasNaoProgramadasMes.size() == 0 || controleIdCliente.get("getListaParadasNaoProgramadasMes") != idCliente
 				|| (controleIdCliente.get("getListaParadasNaoProgramadasMes") == idCliente
 				   && controleMesCliente.get("mesCliente") != mesRelatorio)) {
-			DateTime data = new DateTime(Integer.parseInt(mesRelatorio.substring(0,4)), Integer.parseInt(mesRelatorio.substring(5,7)), Integer.parseInt(mesRelatorio.substring(9,10)),0,0,0);
+			DateTime data = new DateTime(Integer.parseInt(mesRelatorio.substring(0,4)), Integer.parseInt(mesRelatorio.substring(6,7)), Integer.parseInt(mesRelatorio.substring(9,10)),0,0,0);
 			listaParadasNaoProgramadasMes = new ArrayList<ParadasPorTipoVO>();
 			for(ParadasPorTipoVO paradasPorTipoVO:getListaParadasNaoProgramadas(idCliente, mesRelatorio, tipo)){
 				//Verifica se a data pertence ao mes do parametro mesRelatorio
@@ -293,7 +293,7 @@ public class ParadasEjb {
 		if (listaParadasProgramadasEstrategicasMes == null || listaParadasProgramadasEstrategicasMes.size() == 0 || controleIdCliente.get("getListaParadasProgramadasEstrategicasMes") != idCliente
 				|| (controleIdCliente.get("getListaParadasProgramadasEstrategicasMes") == idCliente
 				   && controleMesCliente.get("mesCliente") != mesRelatorio)) {
-			DateTime data = new DateTime(Integer.parseInt(mesRelatorio.substring(0,4)), Integer.parseInt(mesRelatorio.substring(5,7)), Integer.parseInt(mesRelatorio.substring(9,10)),0,0,0);
+			DateTime data = new DateTime(Integer.parseInt(mesRelatorio.substring(0,4)), Integer.parseInt(mesRelatorio.substring(6,7)), Integer.parseInt(mesRelatorio.substring(9,10)),0,0,0);
 			listaParadasProgramadasEstrategicasMes = new ArrayList<ParadasPorTipoVO>();
 			for(ParadasPorTipoVO paradasPorTipoVO:getListaParadasProgramadasEstrategicas(idCliente, mesRelatorio, tipo)){
 				//Verifica se a data pertence ao mes do parametro mesRelatorio
@@ -323,7 +323,7 @@ public class ParadasEjb {
 		if (listaParadasProgramadasMes == null || listaParadasProgramadasMes.size() == 0 ||controleIdCliente.get("getListaParadasProgramadasMes") != idCliente
 				|| (controleIdCliente.get("getListaParadasProgramadasMes") == idCliente
 				   && controleMesCliente.get("mesCliente") != mesRelatorio)) {
-			DateTime data = new DateTime(Integer.parseInt(mesRelatorio.substring(0,4)), Integer.parseInt(mesRelatorio.substring(5,7)), Integer.parseInt(mesRelatorio.substring(9,10)),0,0,0);
+			DateTime data = new DateTime(Integer.parseInt(mesRelatorio.substring(0,4)), Integer.parseInt(mesRelatorio.substring(6,7)), Integer.parseInt(mesRelatorio.substring(9,10)),0,0,0);
 			listaParadasProgramadasMes = new ArrayList<ParadasPorTipoVO>();
 			for(ParadasPorTipoVO paradasPorTipoVO:getListaParadasProgramadas(idCliente, mesRelatorio, tipo)){
 				//Verifica se a data pertence ao mes do parametro mesRelatorio
@@ -365,18 +365,19 @@ public class ParadasEjb {
 				}
 			}	
 		}
-		for(Integer j = 1; j>=0; j--) {	
+		for(Integer j = 1; j>=0; j--) {
 			Integer mesInicial = 0;
 			Integer mesFinal = 0;
 			if (j == 1) {
-				mesInicial = Integer.parseInt(mesRelatorio.substring(5,7))-1;
-				mesFinal = 11;
+				mesInicial = Integer.parseInt(mesRelatorio.substring(6,7));
+				mesFinal = 12;
 			} else {
 				mesInicial = 0;
-				mesFinal = Integer.parseInt(mesRelatorio.substring(5,7));
+				mesFinal = Integer.parseInt(mesRelatorio.substring(6,7));
 			}
 			for(Integer i = mesInicial; i<mesFinal; i++) {
-				if (i <= Integer.parseInt(mesRelatorio.substring(5,7))) {
+				//if (i <= Integer.parseInt(mesRelatorio.substring(6,7))) {
+				if (i <= mesFinal) {
 					if (tipo.equals(PARADAS_NAO_PROGRAMADAS)||tipo.equals(PARADAS_PROGRAMADAS)) {
 						saida = saida + "[(new Date(" + (Integer.parseInt(mesRelatorio.substring(0,4))-j) + "," + i + ").getTime())," + (-meses[j][i]) + "],";
 					} else {
@@ -421,7 +422,7 @@ public class ParadasEjb {
 		double somaHorasAcumulado = 0.0;
 		for(Integer i = 0; i<meses.length; i++) {
 			somaHorasAcumulado = somaHorasAcumulado + meses[i];
-			if (i < Integer.parseInt(mesRelatorio.substring(5,7))) {
+			if (i < Integer.parseInt(mesRelatorio.substring(6,7))) {
 				if (tipo.equals(PARADAS_NAO_PROGRAMADAS)||tipo.equals(PARADAS_PROGRAMADAS)) {
 					saida = saida + "[(new Date(" + Integer.parseInt(mesRelatorio.substring(0,4)) + "," + i + ").getTime())," + (-somaHorasAcumulado) + "],";
 				} else {
@@ -450,7 +451,7 @@ public class ParadasEjb {
 			listaParadas = listaParadasProgramadas;
 		}
 		
-		DateTime data = new DateTime(Integer.parseInt(mesRelatorio.substring(0,4)), Integer.parseInt(mesRelatorio.substring(5,7)), Integer.parseInt(mesRelatorio.substring(9,10)),0,0,0);
+		DateTime data = new DateTime(Integer.parseInt(mesRelatorio.substring(0,4)), Integer.parseInt(mesRelatorio.substring(6,7)), Integer.parseInt(mesRelatorio.substring(9,10)),0,0,0);
 		Double somaHorasMes = 0.0;
 		for (ParadasPorTipoVO paradasPorTipoVO:listaParadas) {
 			//Verifica se a data pertence ao mes do parametro mesRelatorio
