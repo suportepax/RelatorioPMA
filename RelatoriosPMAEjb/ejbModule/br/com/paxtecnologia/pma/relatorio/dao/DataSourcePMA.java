@@ -4,72 +4,63 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.sql.DataSource;
 
 public class DataSourcePMA {
-
 	protected static DataSource dataSource;
 	private Connection conn;
 
 	public DataSourcePMA() {
-		conn = pegaConexao();
+		this.conn = pegaConexao();
 	}
 
 	private Connection pegaConexao() {
-		Connection con = null;
-		Context ic;
+		conn = null;
 		try {
-			ic = new InitialContext();
-			dataSource = (DataSource) ic
-					.lookup("java:jboss/datasource/OracleMonitor");
+			Context ic = new InitialContext();
+			dataSource = (DataSource) ic.lookup("java:jboss/datasource/OracleMonitor");
 			try {
-				con = dataSource.getConnection();
+				conn = dataSource.getConnection();
 			} catch (SQLException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
+
 		} catch (NamingException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		return con;
+		return conn;
 	}
-	
-	public PreparedStatement getPreparedStatement(String sql){
+
+	public PreparedStatement getPreparedStatement(String sql) {
 		PreparedStatement pstmt = null;
 		try {
-			pstmt=conn.prepareStatement(sql);
+			pstmt = this.conn.prepareStatement(sql);
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return pstmt;
 	}
-	
+
 	public ResultSet executaQuery(PreparedStatement pstmt) {
 		ResultSet rs = null;
 		try {
 			rs = pstmt.executeQuery();
-			
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return rs;
-
 	}
-	public Boolean closeConnection(PreparedStatement pstmt){
+
+	public Boolean closeConnection(PreparedStatement pstmt) {
 		try {
 			pstmt.close();
-			conn.close();
+			this.conn.close();
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		return true;
+		return Boolean.valueOf(true);
 	}
 }

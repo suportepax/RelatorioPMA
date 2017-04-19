@@ -1,25 +1,25 @@
 package br.com.paxtecnologia.pma.relatorio.ejb;
 
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.ejb.Stateless;
-
-import org.joda.time.DateTime;
-import org.joda.time.Days;
-
 import br.com.paxtecnologia.pma.relatorio.dao.ParadasDAO;
+import br.com.paxtecnologia.pma.relatorio.util.FormataDataUtil;
 import br.com.paxtecnologia.pma.relatorio.util.FormataValorUtil;
 import br.com.paxtecnologia.pma.relatorio.vo.ParadasPorTipoVO;
 import br.com.paxtecnologia.pma.relatorio.vo.UltimoAnoVO;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import javax.ejb.Stateless;
+import org.joda.time.DateTime;
+import org.joda.time.DateTime.Property;
+import org.joda.time.Days;
 
 @Stateless
 public class ParadasEjb {
-
 	private ParadasDAO paradasDao = new ParadasDAO();
+
 	private List<UltimoAnoVO> listaUltimosAnosHoras;
 	private List<ParadasPorTipoVO> listaParadasEvitadas;
 	private List<ParadasPorTipoVO> listaParadasEvitadasMes;
@@ -38,428 +38,476 @@ public class ParadasEjb {
 	private Integer qtdeParadaEvitadas;
 	private Integer qtdeParadaEvitadasMes;
 	private Integer diasTrabalhados;
-	
 	private static String PARADAS_EVITADAS = "PE";
 	private static String PARADAS_NAO_PROGRAMADAS = "PNP";
 	private static String PARADAS_PROGRAMADAS_ESTRATEGICAS = "PPE";
 	private static String PARADAS_PROGRAMADAS = "PP";
-	
+
 	Map<String, Integer> controleIdCliente = new HashMap<String, Integer>();
 	private Map<String, String> controleMesCliente = new HashMap<String, String>();
 
 	public Integer getDiasTrabalhados(Integer idCliente, String mesRelatorio) {
-		if (diasTrabalhados == null || controleIdCliente.get("getDiasTrabalhados") != idCliente
-				|| (controleIdCliente.get("getDiasTrabalhados") == idCliente
-				   && controleMesCliente.get("mesCliente") != mesRelatorio)) {
-			Calendar gc = paradasDao.getDataUltimoPNP(idCliente, mesRelatorio);
-			
+		if ((this.diasTrabalhados == null) || (this.controleIdCliente.get("getDiasTrabalhados") != idCliente)
+				|| ((this.controleIdCliente.get("getDiasTrabalhados") == idCliente)
+						&& (this.controleMesCliente.get("mesCliente") != mesRelatorio))) {
+			Calendar gc = this.paradasDao.getDataUltimoPNP(idCliente, mesRelatorio);
+
 			Calendar calendar = Calendar.getInstance();
-			calendar.set(Integer.parseInt(mesRelatorio.substring(0,4)), (Integer.parseInt(mesRelatorio.substring(6,7))-1), Integer.parseInt(mesRelatorio.substring(9,10)),0,0,0);
-			int lastDate = calendar.getActualMaximum(Calendar.DAY_OF_MONTH);
-		    calendar.set(Calendar.DAY_OF_MONTH, lastDate);
-		    
+			calendar.set(FormataDataUtil.getCampoMesRelatorio("ano", mesRelatorio).intValue(),
+					FormataDataUtil.getCampoMesRelatorio("mes", mesRelatorio).intValue() - 1,
+					FormataDataUtil.getCampoMesRelatorio("dia", mesRelatorio).intValue(), 0, 0, 0);
+			int lastDate = calendar.getActualMaximum(5);
+			calendar.set(5, lastDate);
+
 			DateTime start = new DateTime(gc.getTime());
 			DateTime end = new DateTime(calendar);
-			
-			int days = Days.daysBetween(start, end).getDays();
-			diasTrabalhados = days;
 
-			controleIdCliente.put("getDiasTrabalhados", idCliente);
-			controleMesCliente.put("controleMesCliente", mesRelatorio);
+			int days = Days.daysBetween(start, end).getDays();
+			this.diasTrabalhados = Integer.valueOf(days);
+
+			this.controleIdCliente.put("getDiasTrabalhados", idCliente);
+			this.controleMesCliente.put("controleMesCliente", mesRelatorio);
 		}
-		return diasTrabalhados;
+		return this.diasTrabalhados;
 	}
 
-	public Integer getQtdeParadaEvitadasTotal(Integer idCliente,
-			String mesRelatorio) {
-		return paradasDao.getQtdeParadaEvitadasTotal(idCliente, mesRelatorio);
+	public Integer getQtdeParadaEvitadasTotal(Integer idCliente, String mesRelatorio) {
+		return this.paradasDao.getQtdeParadaEvitadasTotal(idCliente, mesRelatorio);
 	}
 
 	public List<UltimoAnoVO> getListaUltimosAnosHoras(Integer idCliente, String tipo, String mesRelatorio) {
-		if (listaUltimosAnosHoras == null || controleIdCliente.get("getListaUltimosAnosHoras") != idCliente
-				|| (controleIdCliente.get("getListaUltimosAnosHoras") == idCliente
-				   && controleMesCliente.get("mesCliente") != mesRelatorio)) {
-			listaUltimosAnosHoras = paradasDao.getListaUltimosAnosHoras(idCliente, tipo, mesRelatorio);
-			controleIdCliente.put("getListaUltimosAnosHoras", idCliente);
-			controleMesCliente.put("controleMesCliente", mesRelatorio);
+		if ((this.listaUltimosAnosHoras == null)
+				|| (this.controleIdCliente.get("getListaUltimosAnosHoras") != idCliente)
+				|| ((this.controleIdCliente.get("getListaUltimosAnosHoras") == idCliente)
+						&& (this.controleMesCliente.get("mesCliente") != mesRelatorio))) {
+			this.listaUltimosAnosHoras = this.paradasDao.getListaUltimosAnosHoras(idCliente, tipo, mesRelatorio);
+			this.controleIdCliente.put("getListaUltimosAnosHoras", idCliente);
+			this.controleMesCliente.put("controleMesCliente", mesRelatorio);
 		}
-		return listaUltimosAnosHoras;
+		return this.listaUltimosAnosHoras;
 	}
 
-	public Integer getQtdeParadaProgramadas(Integer idCliente,
-			String mesRelatorio, String tipo) {
-		if (qtdeParadaProgramadas == null || controleIdCliente.get("getQtdeParadaProgramadas") != idCliente
-				|| (controleIdCliente.get("getQtdeParadaProgramadas") == idCliente
-				   && controleMesCliente.get("mesCliente") != mesRelatorio)) {
-			if (listaParadasProgramadas == null || controleIdCliente.get("getQtdeParadaProgramadas") != idCliente
-					|| (controleIdCliente.get("getQtdeParadaProgramadas") == idCliente
-					   && controleMesCliente.get("mesCliente") != mesRelatorio)) {
+	public Integer getQtdeParadaProgramadas(Integer idCliente, String mesRelatorio, String tipo) {
+		if ((this.qtdeParadaProgramadas == null)
+				|| (this.controleIdCliente.get("getQtdeParadaProgramadas") != idCliente)
+				|| ((this.controleIdCliente.get("getQtdeParadaProgramadas") == idCliente)
+						&& (this.controleMesCliente.get("mesCliente") != mesRelatorio))) {
+			if ((this.listaParadasProgramadas == null)
+					|| (this.controleIdCliente.get("getQtdeParadaProgramadas") != idCliente)
+					|| ((this.controleIdCliente.get("getQtdeParadaProgramadas") == idCliente)
+							&& (this.controleMesCliente.get("mesCliente") != mesRelatorio))) {
 				getListaParadasProgramadas(idCliente, mesRelatorio, tipo);
-				controleIdCliente.put("getQtdeParadaProgramadas", idCliente);
-				controleMesCliente.put("controleMesCliente", mesRelatorio);
+				this.controleIdCliente.put("getQtdeParadaProgramadas", idCliente);
+				this.controleMesCliente.put("controleMesCliente", mesRelatorio);
 			}
-			qtdeParadaProgramadas = listaParadasProgramadas.size();
+			this.qtdeParadaProgramadas = Integer.valueOf(this.listaParadasProgramadas.size());
 		}
-		return qtdeParadaProgramadas;
+		return this.qtdeParadaProgramadas;
 	}
 
-	public Integer getQtdeParadaProgramadasMes(Integer idCliente,
-			String mesRelatorio, String tipo) {
-		if (qtdeParadaProgramadasMes == null || controleIdCliente.get("getQtdeParadaProgramadasMes") != idCliente
-				|| (controleIdCliente.get("getQtdeParadaProgramadasMes") == idCliente
-				   && controleMesCliente.get("mesCliente") != mesRelatorio)) {
-			if (listaParadasProgramadasMes == null || controleIdCliente.get("getQtdeParadaProgramadasMes") != idCliente
-					|| (controleIdCliente.get("getQtdeParadaProgramadasMes") == idCliente
-					   && controleMesCliente.get("mesCliente") != mesRelatorio)) {
+	public Integer getQtdeParadaProgramadasMes(Integer idCliente, String mesRelatorio, String tipo) {
+		if ((this.qtdeParadaProgramadasMes == null)
+				|| (this.controleIdCliente.get("getQtdeParadaProgramadasMes") != idCliente)
+				|| ((this.controleIdCliente.get("getQtdeParadaProgramadasMes") == idCliente)
+						&& (this.controleMesCliente.get("mesCliente") != mesRelatorio))) {
+			if ((this.listaParadasProgramadasMes == null)
+					|| (this.controleIdCliente.get("getQtdeParadaProgramadasMes") != idCliente)
+					|| ((this.controleIdCliente.get("getQtdeParadaProgramadasMes") == idCliente)
+							&& (this.controleMesCliente.get("mesCliente") != mesRelatorio))) {
 				getListaParadasProgramadasMes(idCliente, mesRelatorio, tipo);
-				controleIdCliente.put("getQtdeParadaProgramadasMes", idCliente);
-				controleMesCliente.put("controleMesCliente", mesRelatorio);
+				this.controleIdCliente.put("getQtdeParadaProgramadasMes", idCliente);
+				this.controleMesCliente.put("controleMesCliente", mesRelatorio);
 			}
-			qtdeParadaProgramadasMes = listaParadasProgramadasMes.size();
+			this.qtdeParadaProgramadasMes = Integer.valueOf(this.listaParadasProgramadasMes.size());
 		}
-		return qtdeParadaProgramadasMes;
-	}	
+		return this.qtdeParadaProgramadasMes;
+	}
 
 	public Integer getQtdeProgramadasEstrategicas(Integer idCliente, String mesRelatorio, String tipo) {
-		if (qtdeProgramadasEstrategicas == null || controleIdCliente.get("getQtdeProgramadasEstrategicas") != idCliente
-				|| (controleIdCliente.get("getQtdeProgramadasEstrategicas") == idCliente
-				   && controleMesCliente.get("mesCliente") != mesRelatorio)) {
-			if (listaParadasProgramadas == null || controleIdCliente.get("getQtdeProgramadasEstrategicas") != idCliente
-					|| (controleIdCliente.get("getQtdeProgramadasEstrategicas") == idCliente
-					   && controleMesCliente.get("mesCliente") != mesRelatorio)) {
+		if ((this.qtdeProgramadasEstrategicas == null)
+				|| (this.controleIdCliente.get("getQtdeProgramadasEstrategicas") != idCliente)
+				|| ((this.controleIdCliente.get("getQtdeProgramadasEstrategicas") == idCliente)
+						&& (this.controleMesCliente.get("mesCliente") != mesRelatorio))) {
+			if ((this.listaParadasProgramadas == null)
+					|| (this.controleIdCliente.get("getQtdeProgramadasEstrategicas") != idCliente)
+					|| ((this.controleIdCliente.get("getQtdeProgramadasEstrategicas") == idCliente)
+							&& (this.controleMesCliente.get("mesCliente") != mesRelatorio))) {
 				getListaParadasProgramadasEstrategicas(idCliente, mesRelatorio, tipo);
-				controleIdCliente.put("getQtdeProgramadasEstrategicas", idCliente);
-				controleMesCliente.put("controleMesCliente", mesRelatorio);
+				this.controleIdCliente.put("getQtdeProgramadasEstrategicas", idCliente);
+				this.controleMesCliente.put("controleMesCliente", mesRelatorio);
 			}
-			qtdeProgramadasEstrategicas = listaParadasProgramadasEstrategicas.size();
+			this.qtdeProgramadasEstrategicas = Integer.valueOf(this.listaParadasProgramadasEstrategicas.size());
 		}
-		return qtdeProgramadasEstrategicas;
+		return this.qtdeProgramadasEstrategicas;
 	}
 
 	public Integer getQtdeProgramadasEstrategicasMes(Integer idCliente, String mesRelatorio, String tipo) {
-		if (qtdeProgramadasEstrategicasMes == null || controleIdCliente.get("getQtdeProgramadasEstrategicasMes") != idCliente
-				|| (controleIdCliente.get("getQtdeProgramadasEstrategicasMes") == idCliente
-				   && controleMesCliente.get("mesCliente") != mesRelatorio)) {
-			if (listaParadasProgramadasMes == null || controleIdCliente.get("getQtdeProgramadasEstrategicasMes") != idCliente
-					|| (controleIdCliente.get("getQtdeProgramadasEstrategicasMes") == idCliente
-					   && controleMesCliente.get("mesCliente") != mesRelatorio)) {
+		if ((this.qtdeProgramadasEstrategicasMes == null)
+				|| (this.controleIdCliente.get("getQtdeProgramadasEstrategicasMes") != idCliente)
+				|| ((this.controleIdCliente.get("getQtdeProgramadasEstrategicasMes") == idCliente)
+						&& (this.controleMesCliente.get("mesCliente") != mesRelatorio))) {
+			if ((this.listaParadasProgramadasMes == null)
+					|| (this.controleIdCliente.get("getQtdeProgramadasEstrategicasMes") != idCliente)
+					|| ((this.controleIdCliente.get("getQtdeProgramadasEstrategicasMes") == idCliente)
+							&& (this.controleMesCliente.get("mesCliente") != mesRelatorio))) {
 				getListaParadasProgramadasEstrategicasMes(idCliente, mesRelatorio, tipo);
-				controleIdCliente.put("getQtdeProgramadasEstrategicasMes", idCliente);
-				controleMesCliente.put("controleMesCliente", mesRelatorio);
+				this.controleIdCliente.put("getQtdeProgramadasEstrategicasMes", idCliente);
+				this.controleMesCliente.put("controleMesCliente", mesRelatorio);
 			}
-			qtdeProgramadasEstrategicasMes = listaParadasProgramadasEstrategicasMes.size();
+			this.qtdeProgramadasEstrategicasMes = Integer.valueOf(this.listaParadasProgramadasEstrategicasMes.size());
 		}
-		return qtdeProgramadasEstrategicasMes;
+		return this.qtdeProgramadasEstrategicasMes;
 	}
-	
+
 	public Integer getQtdeParadaNaoProgramadas(Integer idCliente, String mesRelatorio, String tipo) {
-		if (qtdeParadaNaoProgramadas == null || controleIdCliente.get("getQtdeParadaNaoProgramadas") != idCliente
-				|| (controleIdCliente.get("getQtdeParadaNaoProgramadas") == idCliente
-				   && controleMesCliente.get("mesCliente") != mesRelatorio)) {
-			if (listaParadasProgramadas == null || controleIdCliente.get("getQtdeParadaNaoProgramadas") != idCliente
-					|| (controleIdCliente.get("getQtdeParadaNaoProgramadas") == idCliente
-					   && controleMesCliente.get("mesCliente") != mesRelatorio)) {
+		if ((this.qtdeParadaNaoProgramadas == null)
+				|| (this.controleIdCliente.get("getQtdeParadaNaoProgramadas") != idCliente)
+				|| ((this.controleIdCliente.get("getQtdeParadaNaoProgramadas") == idCliente)
+						&& (this.controleMesCliente.get("mesCliente") != mesRelatorio))) {
+			if ((this.listaParadasProgramadas == null)
+					|| (this.controleIdCliente.get("getQtdeParadaNaoProgramadas") != idCliente)
+					|| ((this.controleIdCliente.get("getQtdeParadaNaoProgramadas") == idCliente)
+							&& (this.controleMesCliente.get("mesCliente") != mesRelatorio))) {
 				getListaParadasNaoProgramadas(idCliente, mesRelatorio, tipo);
-				controleIdCliente.put("getQtdeParadaNaoProgramadas", idCliente);
-				controleMesCliente.put("controleMesCliente", mesRelatorio);
+				this.controleIdCliente.put("getQtdeParadaNaoProgramadas", idCliente);
+				this.controleMesCliente.put("controleMesCliente", mesRelatorio);
 			}
-			qtdeParadaNaoProgramadas = listaParadasNaoProgramadas.size();
+			this.qtdeParadaNaoProgramadas = Integer.valueOf(this.listaParadasNaoProgramadas.size());
 		}
-		return qtdeParadaNaoProgramadas;
+		return this.qtdeParadaNaoProgramadas;
 	}
-	
+
 	public Integer getQtdeParadaNaoProgramadasMes(Integer idCliente, String mesRelatorio, String tipo) {
-		if (qtdeParadaNaoProgramadasMes == null || controleIdCliente.get("getQtdeParadaNaoProgramadasMes") != idCliente
-				|| (controleIdCliente.get("getQtdeParadaNaoProgramadasMes") == idCliente
-				   && controleMesCliente.get("mesCliente") != mesRelatorio)) {
-			if (listaParadasProgramadasMes == null || controleIdCliente.get("getQtdeParadaNaoProgramadasMes") != idCliente
-					|| (controleIdCliente.get("getQtdeParadaNaoProgramadasMes") == idCliente
-					   && controleMesCliente.get("mesCliente") != mesRelatorio)) {
+		if ((this.qtdeParadaNaoProgramadasMes == null)
+				|| (this.controleIdCliente.get("getQtdeParadaNaoProgramadasMes") != idCliente)
+				|| ((this.controleIdCliente.get("getQtdeParadaNaoProgramadasMes") == idCliente)
+						&& (this.controleMesCliente.get("mesCliente") != mesRelatorio))) {
+			if ((this.listaParadasProgramadasMes == null)
+					|| (this.controleIdCliente.get("getQtdeParadaNaoProgramadasMes") != idCliente)
+					|| ((this.controleIdCliente.get("getQtdeParadaNaoProgramadasMes") == idCliente)
+							&& (this.controleMesCliente.get("mesCliente") != mesRelatorio))) {
 				getListaParadasNaoProgramadasMes(idCliente, mesRelatorio, tipo);
-				controleIdCliente.put("getQtdeParadaNaoProgramadasMes", idCliente);
-				controleMesCliente.put("controleMesCliente", mesRelatorio);
+				this.controleIdCliente.put("getQtdeParadaNaoProgramadasMes", idCliente);
+				this.controleMesCliente.put("controleMesCliente", mesRelatorio);
 			}
-			qtdeParadaNaoProgramadasMes = listaParadasNaoProgramadasMes.size();
+			this.qtdeParadaNaoProgramadasMes = Integer.valueOf(this.listaParadasNaoProgramadasMes.size());
 		}
-		return qtdeParadaNaoProgramadasMes;
-	}	
+		return this.qtdeParadaNaoProgramadasMes;
+	}
 
 	public Integer getQtdeParadaEvitadas(Integer idCliente, String mesRelatorio, String tipo) {
-		if (qtdeParadaEvitadas == null || controleIdCliente.get("getQtdeParadaEvitadas") != idCliente
-				|| (controleIdCliente.get("getQtdeParadaEvitadas") == idCliente
-				   && controleMesCliente.get("mesCliente") != mesRelatorio)) {
-			if (listaParadasEvitadas == null || controleIdCliente.get("getQtdeParadaEvitadas") != idCliente
-					|| (controleIdCliente.get("getQtdeParadaEvitadas") == idCliente
-					   && controleMesCliente.get("mesCliente") != mesRelatorio)) {
+		if ((this.qtdeParadaEvitadas == null) || (this.controleIdCliente.get("getQtdeParadaEvitadas") != idCliente)
+				|| ((this.controleIdCliente.get("getQtdeParadaEvitadas") == idCliente)
+						&& (this.controleMesCliente.get("mesCliente") != mesRelatorio))) {
+			if ((this.listaParadasEvitadas == null)
+					|| (this.controleIdCliente.get("getQtdeParadaEvitadas") != idCliente)
+					|| ((this.controleIdCliente.get("getQtdeParadaEvitadas") == idCliente)
+							&& (this.controleMesCliente.get("mesCliente") != mesRelatorio))) {
 				getListaParadasEvitadas(idCliente, mesRelatorio, tipo);
-				controleIdCliente.put("getQtdeParadaEvitadas", idCliente);
-				controleMesCliente.put("controleMesCliente", mesRelatorio);
+				this.controleIdCliente.put("getQtdeParadaEvitadas", idCliente);
+				this.controleMesCliente.put("controleMesCliente", mesRelatorio);
 			}
-			qtdeParadaEvitadas = listaParadasEvitadas.size();
+			this.qtdeParadaEvitadas = Integer.valueOf(this.listaParadasEvitadas.size());
 		}
-		return qtdeParadaEvitadas;
+		return this.qtdeParadaEvitadas;
 	}
-	
+
 	public Integer getQtdeParadaEvitadasMes(Integer idCliente, String mesRelatorio, String tipo) {
-		if (qtdeParadaEvitadasMes == null || controleIdCliente.get("getQtdeParadaEvitadasMes") != idCliente
-				|| (controleIdCliente.get("getQtdeParadaEvitadasMes") == idCliente
-				   && controleMesCliente.get("mesCliente") != mesRelatorio)) {
-			if (listaParadasEvitadasMes == null || controleIdCliente.get("getQtdeParadaEvitadasMes") != idCliente
-					|| (controleIdCliente.get("getQtdeParadaEvitadasMes") == idCliente
-					   && controleMesCliente.get("mesCliente") != mesRelatorio)) {
+		if ((this.qtdeParadaEvitadasMes == null)
+				|| (this.controleIdCliente.get("getQtdeParadaEvitadasMes") != idCliente)
+				|| ((this.controleIdCliente.get("getQtdeParadaEvitadasMes") == idCliente)
+						&& (this.controleMesCliente.get("mesCliente") != mesRelatorio))) {
+			if ((this.listaParadasEvitadasMes == null)
+					|| (this.controleIdCliente.get("getQtdeParadaEvitadasMes") != idCliente)
+					|| ((this.controleIdCliente.get("getQtdeParadaEvitadasMes") == idCliente)
+							&& (this.controleMesCliente.get("mesCliente") != mesRelatorio))) {
 				getListaParadasEvitadasMes(idCliente, mesRelatorio, tipo);
-				controleIdCliente.put("getQtdeParadaEvitadasMes", idCliente);
-				controleMesCliente.put("controleMesCliente", mesRelatorio);
+				this.controleIdCliente.put("getQtdeParadaEvitadasMes", idCliente);
+				this.controleMesCliente.put("controleMesCliente", mesRelatorio);
 			}
-			qtdeParadaEvitadasMes = listaParadasEvitadasMes.size();
+			this.qtdeParadaEvitadasMes = Integer.valueOf(this.listaParadasEvitadasMes.size());
 		}
-		return qtdeParadaEvitadasMes;
+		return this.qtdeParadaEvitadasMes;
 	}
 
 	public List<ParadasPorTipoVO> getListaParadasEvitadas(Integer idCliente, String mesRelatorio, String tipo) {
-		if (listaParadasEvitadas == null || controleIdCliente.get("getListaParadasEvitadas") != idCliente
-				|| (controleIdCliente.get("getListaParadasEvitadas") == idCliente
-				   && controleMesCliente.get("mesCliente") != mesRelatorio)) {
-			listaParadasEvitadas = paradasDao.getListaParadasPorTipo(idCliente, mesRelatorio, tipo);
-			controleIdCliente.put("getListaParadasEvitadas", idCliente);
-			controleMesCliente.put("controleMesCliente", mesRelatorio);
+		if ((this.listaParadasEvitadas == null) || (this.controleIdCliente.get("getListaParadasEvitadas") != idCliente)
+				|| ((this.controleIdCliente.get("getListaParadasEvitadas") == idCliente)
+						&& (this.controleMesCliente.get("mesCliente") != mesRelatorio))) {
+			this.listaParadasEvitadas = this.paradasDao.getListaParadasPorTipo(idCliente, mesRelatorio, tipo);
+			this.controleIdCliente.put("getListaParadasEvitadas", idCliente);
+			this.controleMesCliente.put("controleMesCliente", mesRelatorio);
 		}
-		return listaParadasEvitadas;
+		return this.listaParadasEvitadas;
 	}
 
 	public List<ParadasPorTipoVO> getListaParadasEvitadasMes(Integer idCliente, String mesRelatorio, String tipo) {
-		if (listaParadasEvitadasMes == null || listaParadasEvitadasMes.size() == 0 || controleIdCliente.get("getListaParadasEvitadasMes") != idCliente
-				|| (controleIdCliente.get("getListaParadasEvitadasMes") == idCliente
-				   && controleMesCliente.get("mesCliente") != mesRelatorio)) {
-			DateTime data = new DateTime(Integer.parseInt(mesRelatorio.substring(0,4)), Integer.parseInt(mesRelatorio.substring(6,7)), Integer.parseInt(mesRelatorio.substring(9,10)),0,0,0);
-			listaParadasEvitadasMes = new ArrayList<ParadasPorTipoVO>();
-			for(ParadasPorTipoVO paradasPorTipoVO:getListaParadasEvitadas(idCliente, mesRelatorio, tipo)){
-				//Verifica se a data pertence ao mes do parametro mesRelatorio
-				if (Integer.parseInt(paradasPorTipoVO.getDataParada().substring(3,5)) == (data.monthOfYear().get()) && Integer.parseInt(paradasPorTipoVO.getDataParada().substring(6,10)) == (data.year().get())) {
-					listaParadasEvitadasMes.add(paradasPorTipoVO);
-				}
-			}		
-			controleIdCliente.put("getListaParadasEvitadasMes", idCliente);
-			controleMesCliente.put("controleMesCliente", mesRelatorio);
-		}
-		return listaParadasEvitadasMes;
-	}
+		if ((this.listaParadasEvitadasMes == null) || (this.listaParadasEvitadasMes.size() == 0)
+				|| (this.controleIdCliente.get("getListaParadasEvitadasMes") != idCliente)
+				|| ((this.controleIdCliente.get("getListaParadasEvitadasMes") == idCliente)
+						&& (this.controleMesCliente.get("mesCliente") != mesRelatorio))) {
+			DateTime data = new DateTime(FormataDataUtil.getCampoMesRelatorio("ano", mesRelatorio).intValue(),
+					FormataDataUtil.getCampoMesRelatorio("mes", mesRelatorio).intValue(),
+					FormataDataUtil.getCampoMesRelatorio("dia", mesRelatorio).intValue(), 0, 0, 0);
 
-	public List<ParadasPorTipoVO> getListaParadasNaoProgramadas(
-			Integer idCliente, String mesRelatorio, String tipo) {
-		if (listaParadasNaoProgramadas == null || controleIdCliente.get("getListaParadasNaoProgramadas") != idCliente
-				|| (controleIdCliente.get("getListaParadasNaoProgramadas") == idCliente
-				   && controleMesCliente.get("mesCliente") != mesRelatorio)) {
-			listaParadasNaoProgramadas = paradasDao.getListaParadasPorTipo(idCliente, mesRelatorio, tipo);
-			controleIdCliente.put("getListaParadasNaoProgramadas", idCliente);
-			controleMesCliente.put("controleMesCliente", mesRelatorio);
-		}
-		return listaParadasNaoProgramadas;
-
-	}
-	
-	public List<ParadasPorTipoVO> getListaParadasNaoProgramadasMes(Integer idCliente, String mesRelatorio, String tipo) {
-		if (listaParadasNaoProgramadasMes == null || listaParadasNaoProgramadasMes.size() == 0 || controleIdCliente.get("getListaParadasNaoProgramadasMes") != idCliente
-				|| (controleIdCliente.get("getListaParadasNaoProgramadasMes") == idCliente
-				   && controleMesCliente.get("mesCliente") != mesRelatorio)) {
-			DateTime data = new DateTime(Integer.parseInt(mesRelatorio.substring(0,4)), Integer.parseInt(mesRelatorio.substring(6,7)), Integer.parseInt(mesRelatorio.substring(9,10)),0,0,0);
-			listaParadasNaoProgramadasMes = new ArrayList<ParadasPorTipoVO>();
-			for(ParadasPorTipoVO paradasPorTipoVO:getListaParadasNaoProgramadas(idCliente, mesRelatorio, tipo)){
-				//Verifica se a data pertence ao mes do parametro mesRelatorio
-				if (Integer.parseInt(paradasPorTipoVO.getDataParada().substring(3,5)) == (data.monthOfYear().get()) && Integer.parseInt(paradasPorTipoVO.getDataParada().substring(6,10)) == (data.year().get())) {
-					listaParadasNaoProgramadasMes.add(paradasPorTipoVO);
+			this.listaParadasEvitadasMes = new ArrayList<ParadasPorTipoVO>();
+			for (ParadasPorTipoVO paradasPorTipoVO : getListaParadasEvitadas(idCliente, mesRelatorio, tipo)) {
+				if (Integer.parseInt(paradasPorTipoVO.getDataParada().substring(3, 5)) == data.monthOfYear().get()) {
+					if (Integer.parseInt(paradasPorTipoVO.getDataParada().substring(6, 10)) == data.year().get())
+						this.listaParadasEvitadasMes.add(paradasPorTipoVO);
 				}
 			}
-			controleIdCliente.put("getListaParadasNaoProgramadasMes", idCliente);
-			controleMesCliente.put("controleMesCliente", mesRelatorio);
+			this.controleIdCliente.put("getListaParadasEvitadasMes", idCliente);
+			this.controleMesCliente.put("controleMesCliente", mesRelatorio);
 		}
-		return listaParadasNaoProgramadasMes;
+		return this.listaParadasEvitadasMes;
 	}
 
-	public List<ParadasPorTipoVO> getListaParadasProgramadasEstrategicas(
-			Integer idCliente, String mesRelatorio, String tipo) {
-		if (listaParadasProgramadasEstrategicas == null || controleIdCliente.get("getListaParadasProgramadasEstrategicas") != idCliente
-				|| (controleIdCliente.get("getListaParadasProgramadasEstrategicas") == idCliente
-				   && controleMesCliente.get("mesCliente") != mesRelatorio)) {
-			listaParadasProgramadasEstrategicas = paradasDao.getListaParadasPorTipo(idCliente, mesRelatorio, tipo);
-			controleIdCliente.put("getListaParadasProgramadasEstrategicas", idCliente);
-			controleMesCliente.put("controleMesCliente", mesRelatorio);
+	public List<ParadasPorTipoVO> getListaParadasNaoProgramadas(Integer idCliente, String mesRelatorio, String tipo) {
+		if ((this.listaParadasNaoProgramadas == null)
+				|| (this.controleIdCliente.get("getListaParadasNaoProgramadas") != idCliente)
+				|| ((this.controleIdCliente.get("getListaParadasNaoProgramadas") == idCliente)
+						&& (this.controleMesCliente.get("mesCliente") != mesRelatorio))) {
+			this.listaParadasNaoProgramadas = this.paradasDao.getListaParadasPorTipo(idCliente, mesRelatorio, tipo);
+			this.controleIdCliente.put("getListaParadasNaoProgramadas", idCliente);
+			this.controleMesCliente.put("controleMesCliente", mesRelatorio);
 		}
-		return listaParadasProgramadasEstrategicas;
-
+		return this.listaParadasNaoProgramadas;
 	}
-	
-	public List<ParadasPorTipoVO> getListaParadasProgramadasEstrategicasMes(Integer idCliente, String mesRelatorio, String tipo) {
-		if (listaParadasProgramadasEstrategicasMes == null || listaParadasProgramadasEstrategicasMes.size() == 0 || controleIdCliente.get("getListaParadasProgramadasEstrategicasMes") != idCliente
-				|| (controleIdCliente.get("getListaParadasProgramadasEstrategicasMes") == idCliente
-				   && controleMesCliente.get("mesCliente") != mesRelatorio)) {
-			DateTime data = new DateTime(Integer.parseInt(mesRelatorio.substring(0,4)), Integer.parseInt(mesRelatorio.substring(6,7)), Integer.parseInt(mesRelatorio.substring(9,10)),0,0,0);
-			listaParadasProgramadasEstrategicasMes = new ArrayList<ParadasPorTipoVO>();
-			for(ParadasPorTipoVO paradasPorTipoVO:getListaParadasProgramadasEstrategicas(idCliente, mesRelatorio, tipo)){
-				//Verifica se a data pertence ao mes do parametro mesRelatorio
-				if (Integer.parseInt(paradasPorTipoVO.getDataParada().substring(3,5)) == (data.monthOfYear().get()) && Integer.parseInt(paradasPorTipoVO.getDataParada().substring(6,10)) == (data.year().get())) {
-					listaParadasProgramadasEstrategicasMes.add(paradasPorTipoVO);
+
+	public List<ParadasPorTipoVO> getListaParadasNaoProgramadasMes(Integer idCliente, String mesRelatorio,
+			String tipo) {
+		if ((this.listaParadasNaoProgramadasMes == null) || (this.listaParadasNaoProgramadasMes.size() == 0)
+				|| (this.controleIdCliente.get("getListaParadasNaoProgramadasMes") != idCliente)
+				|| ((this.controleIdCliente.get("getListaParadasNaoProgramadasMes") == idCliente)
+						&& (this.controleMesCliente.get("mesCliente") != mesRelatorio))) {
+			DateTime data = new DateTime(FormataDataUtil.getCampoMesRelatorio("ano", mesRelatorio).intValue(),
+					FormataDataUtil.getCampoMesRelatorio("mes", mesRelatorio).intValue(),
+					FormataDataUtil.getCampoMesRelatorio("dia", mesRelatorio).intValue(), 0, 0, 0);
+
+			this.listaParadasNaoProgramadasMes = new ArrayList<ParadasPorTipoVO>();
+			for (ParadasPorTipoVO paradasPorTipoVO : getListaParadasNaoProgramadas(idCliente, mesRelatorio, tipo)) {
+				if (Integer.parseInt(paradasPorTipoVO.getDataParada().substring(3, 5)) == data.monthOfYear().get()) {
+					if (Integer.parseInt(paradasPorTipoVO.getDataParada().substring(6, 10)) == data.year().get()) {
+						this.listaParadasNaoProgramadasMes.add(paradasPorTipoVO);
+					}
 				}
 			}
-			controleIdCliente.put("getListaParadasProgramadasEstrategicasMes", idCliente);
-			controleMesCliente.put("controleMesCliente", mesRelatorio);
+			this.controleIdCliente.put("getListaParadasNaoProgramadasMes", idCliente);
+			this.controleMesCliente.put("controleMesCliente", mesRelatorio);
 		}
-		return listaParadasProgramadasEstrategicasMes;
-	}	
-
-	public List<ParadasPorTipoVO> getListaParadasProgramadas(Integer idCliente,
-			String mesRelatorio, String tipo) {
-		if (listaParadasProgramadas == null || controleIdCliente.get("getListaParadasProgramadas") != idCliente
-				|| (controleIdCliente.get("getListaParadasProgramadas") == idCliente
-				   && controleMesCliente.get("mesCliente") != mesRelatorio)) {
-			listaParadasProgramadas = paradasDao.getListaParadasPorTipo(idCliente, mesRelatorio, tipo);
-			controleIdCliente.put("getListaParadasProgramadas", idCliente);
-			controleMesCliente.put("controleMesCliente", mesRelatorio);
-		}
-		return listaParadasProgramadas;
+		return this.listaParadasNaoProgramadasMes;
 	}
-	
+
+	public List<ParadasPorTipoVO> getListaParadasProgramadasEstrategicas(Integer idCliente, String mesRelatorio,
+			String tipo) {
+		if ((this.listaParadasProgramadasEstrategicas == null)
+				|| (this.controleIdCliente.get("getListaParadasProgramadasEstrategicas") != idCliente)
+				|| ((this.controleIdCliente.get("getListaParadasProgramadasEstrategicas") == idCliente)
+						&& (this.controleMesCliente.get("mesCliente") != mesRelatorio))) {
+			this.listaParadasProgramadasEstrategicas = this.paradasDao.getListaParadasPorTipo(idCliente, mesRelatorio,
+					tipo);
+			this.controleIdCliente.put("getListaParadasProgramadasEstrategicas", idCliente);
+			this.controleMesCliente.put("controleMesCliente", mesRelatorio);
+		}
+		return this.listaParadasProgramadasEstrategicas;
+	}
+
+	public List<ParadasPorTipoVO> getListaParadasProgramadasEstrategicasMes(Integer idCliente, String mesRelatorio,
+			String tipo) {
+		if ((this.listaParadasProgramadasEstrategicasMes == null)
+				|| (this.listaParadasProgramadasEstrategicasMes.size() == 0)
+				|| (this.controleIdCliente.get("getListaParadasProgramadasEstrategicasMes") != idCliente)
+				|| ((this.controleIdCliente.get("getListaParadasProgramadasEstrategicasMes") == idCliente)
+						&& (this.controleMesCliente.get("mesCliente") != mesRelatorio))) {
+			DateTime data = new DateTime(FormataDataUtil.getCampoMesRelatorio("ano", mesRelatorio).intValue(),
+					FormataDataUtil.getCampoMesRelatorio("mes", mesRelatorio).intValue(),
+					FormataDataUtil.getCampoMesRelatorio("dia", mesRelatorio).intValue(), 0, 0, 0);
+
+			this.listaParadasProgramadasEstrategicasMes = new ArrayList<ParadasPorTipoVO>();
+			for (ParadasPorTipoVO paradasPorTipoVO : getListaParadasProgramadasEstrategicas(idCliente, mesRelatorio,
+					tipo)) {
+				if (Integer.parseInt(paradasPorTipoVO.getDataParada().substring(3, 5)) == data.monthOfYear().get()) {
+					if (Integer.parseInt(paradasPorTipoVO.getDataParada().substring(6, 10)) == data.year().get()) {
+						this.listaParadasProgramadasEstrategicasMes.add(paradasPorTipoVO);
+					}
+				}
+			}
+			this.controleIdCliente.put("getListaParadasProgramadasEstrategicasMes", idCliente);
+			this.controleMesCliente.put("controleMesCliente", mesRelatorio);
+		}
+		return this.listaParadasProgramadasEstrategicasMes;
+	}
+
+	public List<ParadasPorTipoVO> getListaParadasProgramadas(Integer idCliente, String mesRelatorio, String tipo) {
+		if ((this.listaParadasProgramadas == null)
+				|| (this.controleIdCliente.get("getListaParadasProgramadas") != idCliente)
+				|| ((this.controleIdCliente.get("getListaParadasProgramadas") == idCliente)
+						&& (this.controleMesCliente.get("mesCliente") != mesRelatorio))) {
+			this.listaParadasProgramadas = this.paradasDao.getListaParadasPorTipo(idCliente, mesRelatorio, tipo);
+			this.controleIdCliente.put("getListaParadasProgramadas", idCliente);
+			this.controleMesCliente.put("controleMesCliente", mesRelatorio);
+		}
+		return this.listaParadasProgramadas;
+	}
+
 	public List<ParadasPorTipoVO> getListaParadasProgramadasMes(Integer idCliente, String mesRelatorio, String tipo) {
-		if (listaParadasProgramadasMes == null || listaParadasProgramadasMes.size() == 0 ||controleIdCliente.get("getListaParadasProgramadasMes") != idCliente
-				|| (controleIdCliente.get("getListaParadasProgramadasMes") == idCliente
-				   && controleMesCliente.get("mesCliente") != mesRelatorio)) {
-			DateTime data = new DateTime(Integer.parseInt(mesRelatorio.substring(0,4)), Integer.parseInt(mesRelatorio.substring(6,7)), Integer.parseInt(mesRelatorio.substring(9,10)),0,0,0);
-			listaParadasProgramadasMes = new ArrayList<ParadasPorTipoVO>();
-			for(ParadasPorTipoVO paradasPorTipoVO:getListaParadasProgramadas(idCliente, mesRelatorio, tipo)){
-				//Verifica se a data pertence ao mes do parametro mesRelatorio
-				if (Integer.parseInt(paradasPorTipoVO.getDataParada().substring(3,5)) == (data.monthOfYear().get()) && Integer.parseInt(paradasPorTipoVO.getDataParada().substring(6,10)) == (data.year().get())) {
-					listaParadasProgramadasMes.add(paradasPorTipoVO);
+		if ((this.listaParadasProgramadasMes == null) || (this.listaParadasProgramadasMes.size() == 0)
+				|| (this.controleIdCliente.get("getListaParadasProgramadasMes") != idCliente)
+				|| ((this.controleIdCliente.get("getListaParadasProgramadasMes") == idCliente)
+						&& (this.controleMesCliente.get("mesCliente") != mesRelatorio))) {
+			DateTime data = new DateTime(FormataDataUtil.getCampoMesRelatorio("ano", mesRelatorio).intValue(),
+					FormataDataUtil.getCampoMesRelatorio("mes", mesRelatorio).intValue(),
+					FormataDataUtil.getCampoMesRelatorio("dia", mesRelatorio).intValue(), 0, 0, 0);
+
+			this.listaParadasProgramadasMes = new ArrayList<ParadasPorTipoVO>();
+			for (ParadasPorTipoVO paradasPorTipoVO : getListaParadasProgramadas(idCliente, mesRelatorio, tipo)) {
+				if (Integer.parseInt(paradasPorTipoVO.getDataParada().substring(3, 5)) == data.monthOfYear().get()) {
+					if (Integer.parseInt(paradasPorTipoVO.getDataParada().substring(6, 10)) == data.year().get())
+						this.listaParadasProgramadasMes.add(paradasPorTipoVO);
 				}
 			}
-			controleIdCliente.put("getListaParadasProgramadasMes", idCliente);
-			controleMesCliente.put("controleMesCliente", mesRelatorio);
+			this.controleIdCliente.put("getListaParadasProgramadasMes", idCliente);
+			this.controleMesCliente.put("controleMesCliente", mesRelatorio);
 		}
-		return listaParadasProgramadasMes;
-	}	
-	
+		return this.listaParadasProgramadasMes;
+	}
+
 	public String getParadas(String tipo, String mesRelatorio) {
 		List<ParadasPorTipoVO> listaParadas = null;
 
 		if (tipo.equals(PARADAS_EVITADAS)) {
-			listaParadas = listaParadasEvitadas;
+			listaParadas = this.listaParadasEvitadas;
 		} else if (tipo.equals(PARADAS_NAO_PROGRAMADAS)) {
-			listaParadas = listaParadasNaoProgramadas;
+			listaParadas = this.listaParadasNaoProgramadas;
 		} else if (tipo.equals(PARADAS_PROGRAMADAS_ESTRATEGICAS)) {
-			listaParadas = listaParadasProgramadasEstrategicas;
+			listaParadas = this.listaParadasProgramadasEstrategicas;
 		} else if (tipo.equals(PARADAS_PROGRAMADAS)) {
-			listaParadas = listaParadasProgramadas;
+			listaParadas = this.listaParadasProgramadas;
 		}
-		
+
 		String saida = "[";
-		double [][] meses = new double[2][12]; 
-		for (ParadasPorTipoVO paradasPorTipoVO:listaParadas) {
-			for (Integer j = 0; j<=1; j++) {
-				Double somaHoras = 0.0;
-				for (Integer i = 0; i<12; i++) {
-					somaHoras = 0.0;
-					//Verifica se a data pertence ao mesmo mes
-					if (Integer.parseInt(paradasPorTipoVO.getDataParada().substring(3,5)) == (i+1) && (Integer.parseInt(paradasPorTipoVO.getDataParada().substring(6,10))) == (Integer.parseInt(mesRelatorio.substring(0,4))-j)) {
-						somaHoras = somaHoras + paradasPorTipoVO.getHoras();
-					}
-					meses[j][i] = meses[j][i] + somaHoras;
-				}
-			}	
+		double[][] meses = new double[2][12];
+		Integer j;
+		for (Iterator<ParadasPorTipoVO> localIterator = listaParadas.iterator(); localIterator.hasNext();) {
+			ParadasPorTipoVO paradasPorTipoVO = (ParadasPorTipoVO) localIterator.next();
+			j = Integer.valueOf(0);
+			continue;
 		}
-		for(Integer j = 1; j>=0; j--) {
-			Integer mesInicial = 0;
-			Integer mesFinal = 0;
-			if (j == 1) {
-				mesInicial = Integer.parseInt(mesRelatorio.substring(6,7));
-				mesFinal = 12;
+
+		for (Integer j1 = Integer.valueOf(1); j1.intValue() >= 0; j1 = Integer.valueOf(j1.intValue() - 1)) {
+			Integer mesInicial = Integer.valueOf(0);
+			Integer mesFinal = Integer.valueOf(0);
+			if (j1.intValue() == 1) {
+				mesInicial = FormataDataUtil.getCampoMesRelatorio("mes", mesRelatorio);
+				mesFinal = Integer.valueOf(12);
 			} else {
-				mesInicial = 0;
-				mesFinal = Integer.parseInt(mesRelatorio.substring(6,7));
+				mesInicial = Integer.valueOf(0);
+				mesFinal = FormataDataUtil.getCampoMesRelatorio("mes", mesRelatorio);
 			}
-			for(Integer i = mesInicial; i<mesFinal; i++) {
-				//if (i <= Integer.parseInt(mesRelatorio.substring(6,7))) {
-				if (i <= mesFinal) {
-					if (tipo.equals(PARADAS_NAO_PROGRAMADAS)||tipo.equals(PARADAS_PROGRAMADAS)) {
-						saida = saida + "[(new Date(" + (Integer.parseInt(mesRelatorio.substring(0,4))-j) + "," + i + ").getTime())," + (-meses[j][i]) + "],";
+			for (Integer i = mesInicial; i.intValue() < mesFinal.intValue(); i = Integer.valueOf(i.intValue() + 1)) {
+				if (i.intValue() <= mesFinal.intValue()) {
+					if ((tipo.equals(PARADAS_NAO_PROGRAMADAS)) || (tipo.equals(PARADAS_PROGRAMADAS))) {
+						saida =
+
+								saida + "[(new Date(" + (Integer.parseInt(mesRelatorio.substring(0, 4)) - j1.intValue())
+										+ "," + i + ").getTime())," + -meses[j1.intValue()][i.intValue()] + "],";
 					} else {
-						saida = saida + "[(new Date(" + (Integer.parseInt(mesRelatorio.substring(0,4))-j) + "," + i + ").getTime())," + meses[j][i] + "],";
+						saida =
+
+								saida + "[(new Date(" + (Integer.parseInt(mesRelatorio.substring(0, 4)) - j1.intValue())
+										+ "," + i + ").getTime())," + meses[j1.intValue()][i.intValue()] + "],";
 					}
 				} else {
-					saida = saida + "[(new Date(" + (Integer.parseInt(mesRelatorio.substring(0,4))-j) + "," + i + ").getTime())," + 0.0 + "],";
+					saida =
+
+							saida + "[(new Date(" + (Integer.parseInt(mesRelatorio.substring(0, 4)) - j1.intValue())
+									+ "," + i + ").getTime())," + 0.0D + "],";
 				}
 			}
-		}	
+		}
 
-		saida = saida.substring(0,saida.length()-1);
+		saida = saida.substring(0, saida.length() - 1);
 		saida = saida + "]";
 		return saida;
 	}
-	
+
 	public String getParadasAcumulado(String tipo, String mesRelatorio) {
 		List<ParadasPorTipoVO> listaParadas = null;
 
 		if (tipo.equals(PARADAS_EVITADAS)) {
-			listaParadas = listaParadasEvitadas;
+			listaParadas = this.listaParadasEvitadas;
 		} else if (tipo.equals(PARADAS_NAO_PROGRAMADAS)) {
-			listaParadas = listaParadasNaoProgramadas;
+			listaParadas = this.listaParadasNaoProgramadas;
 		} else if (tipo.equals(PARADAS_PROGRAMADAS_ESTRATEGICAS)) {
-			listaParadas = listaParadasProgramadasEstrategicas;
+			listaParadas = this.listaParadasProgramadasEstrategicas;
 		} else if (tipo.equals(PARADAS_PROGRAMADAS)) {
-			listaParadas = listaParadasProgramadas;
+			listaParadas = this.listaParadasProgramadas;
 		}
-		
+
 		String saida = "[";
-		double [] meses = new double[12]; 
-		for (ParadasPorTipoVO paradasPorTipoVO:listaParadas) {
-			for (Integer i = 0; i<12; i++) {
-				Double somaHoras = 0.0;
-				//Verifica se a data pertence ao mes do parametro mesRelatorio
-				if ((Integer.parseInt(paradasPorTipoVO.getDataParada().substring(3,5))-1) == i && Integer.parseInt(paradasPorTipoVO.getDataParada().substring(6,10)) == (Integer.parseInt(mesRelatorio.substring(0,4)))) {
-					 somaHoras = somaHoras + paradasPorTipoVO.getHoras();
-				}
-				meses[i] = meses[i] + somaHoras;
-			}	
+		double[] meses = new double[12];
+		Integer i;
+		for (Iterator<ParadasPorTipoVO> localIterator = listaParadas.iterator(); localIterator.hasNext();) {
+			ParadasPorTipoVO paradasPorTipoVO = (ParadasPorTipoVO) localIterator.next();
+			i = Integer.valueOf(0);
+			continue;
 		}
-		double somaHorasAcumulado = 0.0;
-		for(Integer i = 0; i<meses.length; i++) {
-			somaHorasAcumulado = somaHorasAcumulado + meses[i];
-			if (i < Integer.parseInt(mesRelatorio.substring(6,7))) {
-				if (tipo.equals(PARADAS_NAO_PROGRAMADAS)||tipo.equals(PARADAS_PROGRAMADAS)) {
-					saida = saida + "[(new Date(" + Integer.parseInt(mesRelatorio.substring(0,4)) + "," + i + ").getTime())," + (-somaHorasAcumulado) + "],";
+
+		double somaHorasAcumulado = 0.0D;
+		for (Integer a = Integer.valueOf(0); a.intValue() < meses.length; a = Integer.valueOf(a.intValue() + 1)) {
+			somaHorasAcumulado += meses[a.intValue()];
+			if (a.intValue() < FormataDataUtil.getCampoMesRelatorio("mes", mesRelatorio).intValue()) {
+				if ((tipo.equals(PARADAS_NAO_PROGRAMADAS)) || (tipo.equals(PARADAS_PROGRAMADAS))) {
+					saida =
+
+							saida + "[(new Date(" + Integer.parseInt(mesRelatorio.substring(0, 4)) + "," + a
+									+ ").getTime())," + -somaHorasAcumulado + "],";
 				} else {
-					saida = saida + "[(new Date(" + Integer.parseInt(mesRelatorio.substring(0,4)) + "," + i + ").getTime())," + somaHorasAcumulado + "],";
+					saida =
+
+							saida + "[(new Date(" + Integer.parseInt(mesRelatorio.substring(0, 4)) + "," + a
+									+ ").getTime())," + somaHorasAcumulado + "],";
 				}
 			} else {
-				saida = saida + "[(new Date(" + Integer.parseInt(mesRelatorio.substring(0,4)) + "," + i + ").getTime())," + 0.0 + "],";
+				saida =
+
+						saida + "[(new Date(" + Integer.parseInt(mesRelatorio.substring(0, 4)) + "," + a
+								+ ").getTime())," + 0.0D + "],";
 			}
 		}
 
-		saida = saida.substring(0,saida.length()-1);
+		saida = saida.substring(0, saida.length() - 1);
 		saida = saida + "]";
 		return saida;
 	}
-	
+
 	public Double getTempoParadasMes(String tipo, String mesRelatorio) {
 		List<ParadasPorTipoVO> listaParadas = null;
 
 		if (tipo.equals(PARADAS_EVITADAS)) {
-			listaParadas = listaParadasEvitadas;
+			listaParadas = this.listaParadasEvitadas;
 		} else if (tipo.equals(PARADAS_NAO_PROGRAMADAS)) {
-			listaParadas = listaParadasNaoProgramadas;
+			listaParadas = this.listaParadasNaoProgramadas;
 		} else if (tipo.equals(PARADAS_PROGRAMADAS_ESTRATEGICAS)) {
-			listaParadas = listaParadasProgramadasEstrategicas;
+			listaParadas = this.listaParadasProgramadasEstrategicas;
 		} else if (tipo.equals(PARADAS_PROGRAMADAS)) {
-			listaParadas = listaParadasProgramadas;
+			listaParadas = this.listaParadasProgramadas;
 		}
-		
-		DateTime data = new DateTime(Integer.parseInt(mesRelatorio.substring(0,4)), Integer.parseInt(mesRelatorio.substring(6,7)), Integer.parseInt(mesRelatorio.substring(9,10)),0,0,0);
-		Double somaHorasMes = 0.0;
-		for (ParadasPorTipoVO paradasPorTipoVO:listaParadas) {
-			//Verifica se a data pertence ao mes do parametro mesRelatorio
-			if (Integer.parseInt(paradasPorTipoVO.getDataParada().substring(3,5)) == (data.monthOfYear().get()) && Integer.parseInt(paradasPorTipoVO.getDataParada().substring(6,10)) == (data.year().get())) {
-				somaHorasMes = somaHorasMes + paradasPorTipoVO.getHoras();
+
+		DateTime data = new DateTime(FormataDataUtil.getCampoMesRelatorio("ano", mesRelatorio).intValue(),
+				FormataDataUtil.getCampoMesRelatorio("mes", mesRelatorio).intValue(),
+				FormataDataUtil.getCampoMesRelatorio("dia", mesRelatorio).intValue(), 0, 0, 0);
+
+		Double somaHorasMes = Double.valueOf(0.0D);
+		for (ParadasPorTipoVO paradasPorTipoVO : listaParadas) {
+			if (Integer.parseInt(paradasPorTipoVO.getDataParada().substring(3, 5)) == data.monthOfYear().get()) {
+				if (Integer.parseInt(paradasPorTipoVO.getDataParada().substring(6, 10)) == data.year().get()) {
+					somaHorasMes = Double
+							.valueOf(somaHorasMes.doubleValue() + paradasPorTipoVO.getHoras().doubleValue());
+				}
 			}
 		}
-		
-		return FormataValorUtil.converterDoubleDoisDecimais(somaHorasMes);
-	}	
+		return Double.valueOf(FormataValorUtil.converterDoubleDoisDecimais(somaHorasMes.doubleValue()));
+	}
 }

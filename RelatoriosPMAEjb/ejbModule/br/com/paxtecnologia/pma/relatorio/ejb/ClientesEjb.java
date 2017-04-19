@@ -1,14 +1,12 @@
 package br.com.paxtecnologia.pma.relatorio.ejb;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.ejb.Stateless;
-
 import br.com.paxtecnologia.pma.relatorio.dao.ClienteDAO;
 import br.com.paxtecnologia.pma.relatorio.vo.ClienteVO;
 import br.com.paxtecnologia.pma.relatorio.vo.MesRelatorioVO;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import javax.ejb.Stateless;
 
 @Stateless
 public class ClientesEjb {
@@ -20,39 +18,33 @@ public class ClientesEjb {
 	private Map<String, Integer> controleIdCliente = new HashMap<String, Integer>();
 
 	public List<ClienteVO> getListaClientes() {
-		if (listaClientes == null) {
-			listaClientes = clienteDAO.getListaClientes();
+		if (this.listaClientes == null) {
+			this.listaClientes = this.clienteDAO.getListaClientes();
 		}
-		return listaClientes;
+		return this.listaClientes;
 	}
 
 	public List<MesRelatorioVO> getListaMes(Integer idCliente) {
-
-		if (listaMesRelatorio == null
-				|| controleIdCliente.get("getListaMes") != idCliente) {
-			controleIdCliente.put("getListaMes", idCliente);
-			listaMesRelatorio = clienteDAO.getListaMes(idCliente);
+		if ((this.listaMesRelatorio == null) || (this.controleIdCliente.get("getListaMes") != idCliente)) {
+			this.controleIdCliente.put("getListaMes", idCliente);
+			this.listaMesRelatorio = this.clienteDAO.getListaMes(idCliente);
 		}
-		return listaMesRelatorio;
-
+		return this.listaMesRelatorio;
 	}
 
 	public String getLogoCliente(Integer idCliente) {
-		if (logoCliente == null
-				|| controleIdCliente.get("getLogoCliente") != idCliente) {
-			controleIdCliente.put("getLogoCliente", idCliente);
-			logoCliente = clienteDAO.getLogoCliente(idCliente);
+		if ((this.logoCliente == null) || (this.controleIdCliente.get("getLogoCliente") != idCliente)) {
+			this.controleIdCliente.put("getLogoCliente", idCliente);
+			this.logoCliente = this.clienteDAO.getLogoCliente(idCliente);
 		}
-		return logoCliente;
+		return this.logoCliente;
 	}
 
 	public String getNomeCliente(Integer idCliente) {
-		if (nomeCliente == null
-				|| controleIdCliente.get("getNomeCliente") != idCliente) {
-			controleIdCliente.put("getNomeCliente", idCliente);
-			nomeCliente = clienteDAO.getNomeCliente(idCliente);
+		if ((this.nomeCliente == null) || (this.controleIdCliente.get("getNomeCliente") != idCliente)) {
+			this.controleIdCliente.put("getNomeCliente", idCliente);
+			this.nomeCliente = this.clienteDAO.getNomeCliente(idCliente);
 		}
-		return nomeCliente;
+		return this.nomeCliente;
 	}
-
 }

@@ -1,65 +1,71 @@
 package br.com.paxtecnologia.pma.relatorio;
 
+import br.com.paxtecnologia.pma.relatorio.ejb.WorkloadEjb;
+import br.com.paxtecnologia.pma.relatorio.vo.DBSizeTabelaVO;
+import br.com.paxtecnologia.pma.relatorio.vo.HostVO;
 import java.io.Serializable;
-
+import java.util.List;
 import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
-import java.util.List;
-
-import br.com.paxtecnologia.pma.relatorio.ejb.WorkloadEjb;
-import br.com.paxtecnologia.pma.relatorio.vo.HostVO;
 
 @ViewScoped
-@ManagedBean(name = "workloadBean")
-public class WorkloadBean implements Serializable {
+@ManagedBean(name="workloadBean")
+public class WorkloadBean
+implements Serializable {
+    private static final long serialVersionUID = 1;
+    @EJB
+    private WorkloadEjb workloadEjb;
+    @ManagedProperty(value="#{clientesBean.idCliente}")
+    private Integer idCliente;
+    @ManagedProperty(value="#{clientesBean.mesRelatorio}")
+    private String mesRelatorio;
+    private Integer diasNoMes;
+    private List<HostVO> hosts;
+    private List<DBSizeTabelaVO> dbSizeTabelaVO;
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
+    public void setIdCliente(Integer idCliente) {
+        this.idCliente = idCliente;
+    }
 
-	@EJB
-	private WorkloadEjb workloadEjb;
+    public void setMesRelatorio(String mesRelatorio) {
+        this.mesRelatorio = mesRelatorio;
+    }
 
-	@ManagedProperty(value = "#{clientesBean.idCliente}")
-	private Integer idCliente;
+    public String getTf(Integer idInstancia, Integer idGraficoControle, Integer idTf) {
+        return this.workloadEjb.getTf(idInstancia, this.mesRelatorio, idGraficoControle, idTf);
+    }
 
-	@ManagedProperty(value = "#{clientesBean.mesRelatorio}")
-	private String mesRelatorio;
-	
-	private Integer diasNoMes;
-	private List<HostVO> hosts;
+    public String getLegenda(Integer idInstancia, Integer idGraficoControle, Integer idTf) {
+        return this.workloadEjb.getLegenda(idInstancia, idGraficoControle, idTf);
+    }
 
-	public void setIdCliente(Integer idCliente) {
-		this.idCliente = idCliente;
-	}
+    public Integer getDiasNoMes() {
+        if (this.diasNoMes == null) {
+            this.diasNoMes = this.workloadEjb.getDiasNoMes(this.mesRelatorio);
+        }
+        return this.diasNoMes;
+    }
 
-	public void setMesRelatorio(String mesRelatorio) {
-		this.mesRelatorio = mesRelatorio;
-	}
+    public List<HostVO> getCapHosts(Integer capitulo) {
+        this.hosts = null;
+        if (this.hosts == null) {
+            this.hosts = this.workloadEjb.getHosts(this.idCliente, capitulo);
+        }
+        return this.hosts;
+    }
 
-	public String getTf(Integer idInstancia, Integer idGraficoControle, Integer idTf) {
-		return workloadEjb.getTf(idInstancia, mesRelatorio, idGraficoControle, idTf);
-	}
+    public List<HostVO> getHosts() {
+        this.hosts = null;
+        if (this.hosts == null) {
+            this.hosts = this.workloadEjb.getHosts(this.idCliente);
+        }
+        return this.hosts;
+    }
 
-	public String getLegenda(Integer idInstancia, Integer idGraficoControle, Integer idTf) {
-		return workloadEjb.getLegenda(idInstancia, idGraficoControle, idTf);
-	}
-	
-	public Integer getDiasNoMes() {
-		if (diasNoMes == null) {
-			diasNoMes = workloadEjb.getDiasNoMes(mesRelatorio);
-		}
-		return diasNoMes;
-	}
-
-	public List<HostVO> getHosts() {
-		if (hosts == null) {
-			hosts = workloadEjb.getHosts(idCliente);
-		}
-		return hosts;
-	}
-	
+    public List<DBSizeTabelaVO> getDBSizeTabela(Integer metricaLinkId) {
+        this.dbSizeTabelaVO = this.workloadEjb.getDBSizeTabela(this.mesRelatorio, metricaLinkId);
+        return this.dbSizeTabelaVO;
+    }
 }

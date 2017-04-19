@@ -1,75 +1,88 @@
 package br.com.paxtecnologia.pma.relatorio.util;
 
-import java.sql.Date;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
 public class FormataDataUtil {
-	
-	public static Date formataAnoInicio(String mesRelatorio) {
-		Date anoInicio = null;
+	public static java.sql.Date formataAnoInicio(String mesRelatorio) {
+		java.sql.Date anoInicio = null;
 		try {
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 			Calendar c = Calendar.getInstance();
 			c.setTime(sdf.parse(mesRelatorio));
-			c.add(Calendar.MONTH, -11);
-			anoInicio = new Date(sdf.parse(sdf.format(c.getTime())).getTime());
+			c.add(2, -11);
+			anoInicio = new java.sql.Date(sdf.parse(sdf.format(c.getTime())).getTime());
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}
 		return anoInicio;
 	}
-	
-	public static Date formataDataInicio(String mesRelatorio) {
-		Date dataInicio = null;
+
+	public static java.sql.Date formataDataInicio(String mesRelatorio) {
+		java.sql.Date dataInicio = null;
 		try {
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-			dataInicio = new Date((sdf.parse(mesRelatorio).getTime()));
+			dataInicio = new java.sql.Date(sdf.parse(mesRelatorio).getTime());
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}
 		return dataInicio;
 	}
-	
-	public static Date formataDataFim(String mesRelatorio) {
-		Date dataFim = null;
+
+	public static java.sql.Date formataDataFim(String mesRelatorio) {
+		java.sql.Date dataFim = null;
 		try {
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 			Calendar c = Calendar.getInstance();
 			c.setTime(sdf.parse(mesRelatorio));
-			//c.add(Calendar.MONTH, 1);
-			dataFim = new Date((sdf.parse(sdf.format(c.getTime())).getTime()));
+
+			dataFim = new java.sql.Date(sdf.parse(sdf.format(c.getTime())).getTime());
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}
 		return dataFim;
 	}
-	
-	public static Date formataDataFim_dia(String mesRelatorio) {
-		Date dataFim = null;
+
+	public static java.sql.Date formataDataFim_dia(String mesRelatorio) {
+		java.sql.Date dataFim = null;
 		try {
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 			Calendar c = Calendar.getInstance();
 			c.setTime(sdf.parse(mesRelatorio));
-			c.add(Calendar.MONTH, 1);
-			dataFim = new Date((sdf.parse(sdf.format(c.getTime())).getTime()));
+			c.add(2, 1);
+			dataFim = new java.sql.Date(sdf.parse(sdf.format(c.getTime())).getTime());
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}
 		return dataFim;
 	}
-	
+
 	public static Integer diasNoMes(String mesRelatorio) {
-		Integer dia = 0;
+		Integer dia = Integer.valueOf(0);
 		try {
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 			Calendar c = Calendar.getInstance();
 			c.setTime(sdf.parse(mesRelatorio));
-			dia = c.getActualMaximum( Calendar.DAY_OF_MONTH );
+			dia = Integer.valueOf(c.getActualMaximum(5));
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}
 		return dia;
-	}	
+	}
+
+	public static Integer getCampoMesRelatorio(String campo, String mesRelatorio) {
+		String ano = mesRelatorio.split("-")[0];
+		String mes = mesRelatorio.split("-")[1];
+		String dia = mesRelatorio.split("-")[2];
+
+		if (campo.equals("dia"))
+			return Integer.valueOf(Integer.parseInt(dia));
+		if (campo.equals("mes"))
+			return Integer.valueOf(Integer.parseInt(mes));
+		if (campo.equals("ano")) {
+			return Integer.valueOf(Integer.parseInt(ano));
+		}
+		return null;
+	}
 }

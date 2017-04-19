@@ -13,4 +13,61 @@
     <servlet-name>Faces Servlet</servlet-name>
     <url-pattern>/faces/*</url-pattern>
   </servlet-mapping>
-</web-app>
+  <welcome-file-list>
+  <welcome-file>index.xhtml</welcome-file>
+ </welcome-file-list>
+ 
+     <!-- Protected Areas -->
+<!--     <security-constraint> -->
+<!--         <web-resource-collection> -->
+            
+<!--             <web-resource-name>Only admins</web-resource-name> -->
+<!--             <url-pattern>/*</url-pattern> -->
+
+<!--             <http-method>GET</http-method> -->
+<!--         	<http-method>POST</http-method> -->
+        	
+<!--         </web-resource-collection> -->
+<!--         <auth-constraint> -->
+<!--             <role-name>ADMIN</role-name> -->
+<!--         </auth-constraint> -->
+<!--     </security-constraint> -->
+<!--     <security-constraint> -->
+<!--         <web-resource-collection> -->
+<!--             <web-resource-name>Users and admins</web-resource-name> -->
+<!--             <url-pattern>/*</url-pattern> -->
+<!--             <http-method>GET</http-method> -->
+<!--         	<http-method>POST</http-method> -->
+<!--         </web-resource-collection> -->
+        
+<!--         <auth-constraint> -->
+<!--             <role-name>ADMIN</role-name> -->
+<!--             <role-name>USER</role-name> -->
+<!--         </auth-constraint> -->
+<!--     </security-constraint> -->
+ 
+<!--     Validation By Form -->
+<!--     <login-config> -->
+<!--         <auth-method>BASIC</auth-method> -->
+<!--         <realm-name>ApplicationRealm</realm-name> -->
+<!--     </login-config> -->
+ 
+<!--     Allowed Roles -->
+<!--     <security-role> -->
+<!--         <role-name>ADMIN</role-name> -->
+<!--     </security-role> -->
+<!--     <security-role> -->
+<!--         <role-name>USER</role-name> -->
+<!--     </security-role> -->
+ 
+    <!-- Filter to get the user name and work with it
+    <filter>
+        <filter-name>LoginFilter</filter-name>
+        <filter-class>br.com.paxtecnologia.filters.LoginFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>LoginFilter</filter-name>
+        <url-pattern>/protegido/*</url-pattern>
+        <url-pattern>/relatorio/*</url-pattern>
+    </filter-mapping>
+  --></web-app>

@@ -1,7 +1,6 @@
 package br.com.paxtecnologia.pma.relatorio.vo;
 
 public class ChamadoQuantidadeVO {
-
 	private String nome;
 	private Integer qtdeAberto;
 	private Integer qtdeFechado;
@@ -11,7 +10,7 @@ public class ChamadoQuantidadeVO {
 	private Double porcentoEmAberto;
 
 	public String getNome() {
-		return nome;
+		return this.nome;
 	}
 
 	public void setNome(String nome) {
@@ -19,7 +18,7 @@ public class ChamadoQuantidadeVO {
 	}
 
 	public Integer getQtdeAberto() {
-		return qtdeAberto;
+		return this.qtdeAberto;
 	}
 
 	public void setQtdeAberto(Integer qtdeAberto) {
@@ -27,7 +26,7 @@ public class ChamadoQuantidadeVO {
 	}
 
 	public Double getPorcentoAberto() {
-		return porcentoAberto;
+		return this.porcentoAberto;
 	}
 
 	public void setPorcentoAberto(Double porcentoAberto) {
@@ -35,7 +34,7 @@ public class ChamadoQuantidadeVO {
 	}
 
 	public Integer getQtdeFechado() {
-		return qtdeFechado;
+		return this.qtdeFechado;
 	}
 
 	public void setQtdeFechado(Integer qtdeFechado) {
@@ -43,7 +42,7 @@ public class ChamadoQuantidadeVO {
 	}
 
 	public Double getPorcentoFechado() {
-		return porcentoFechado;
+		return this.porcentoFechado;
 	}
 
 	public void setPorcentoFechado(Double porcentoFechado) {
@@ -51,7 +50,8 @@ public class ChamadoQuantidadeVO {
 	}
 
 	public Integer getQtdeEmAberto() {
-		return qtdeEmAberto;
+
+		return this.qtdeEmAberto;
 	}
 
 	public void setQtdeEmAberto(Integer qtdeEmAberto) {
@@ -59,11 +59,10 @@ public class ChamadoQuantidadeVO {
 	}
 
 	public Double getPorcentoEmAberto() {
-		return porcentoEmAberto;
+		return this.porcentoEmAberto;
 	}
 
 	public void setPorcentoEmAberto(Double porcentoEmAberto) {
 		this.porcentoEmAberto = porcentoEmAberto;
 	}
-
 }

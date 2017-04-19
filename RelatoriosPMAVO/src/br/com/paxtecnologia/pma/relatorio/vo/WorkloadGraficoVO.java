@@ -7,7 +7,7 @@ public class WorkloadGraficoVO {
 	private Integer tipo_calculo;
 
 	public Integer getGraficoId() {
-		return graficoId;
+		return this.graficoId;
 	}
 
 	public void setGraficoId(Integer graficoId) {
@@ -15,7 +15,7 @@ public class WorkloadGraficoVO {
 	}
 
 	public String getTitulo() {
-		return titulo;
+		return this.titulo;
 	}
 
 	public void setTitulo(String titulo) {
@@ -23,7 +23,7 @@ public class WorkloadGraficoVO {
 	}
 
 	public Integer getMes_ano() {
-		return mes_ano;
+		return this.mes_ano;
 	}
 
 	public void setMes_ano(Integer mes_ano) {
@@ -31,11 +31,10 @@ public class WorkloadGraficoVO {
 	}
 
 	public Integer getTipo_calculo() {
-		return tipo_calculo;
+		return this.tipo_calculo;
 	}
 
 	public void setTipo_calculo(Integer tipo_calculo) {
 		this.tipo_calculo = tipo_calculo;
 	}
-
 }

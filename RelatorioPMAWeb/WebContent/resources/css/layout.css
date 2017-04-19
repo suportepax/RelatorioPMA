@@ -5,7 +5,7 @@ div {
 	
 }
 
-#indicadores,#chamadossolicitantes,#tipochamado,#chamadoemaberto,#chamadofechado,#chamadohost,#principaltimeframe,#outrostimeframe,#princapaloutros_tudo,#princapaloutros_comercial,#workload,#resumodeparadas,#paradasevitadas,#paradasnaoprogramadas,#programadassestrategicas,#paradasprogramadas,#totais
+#indicadores,#chamadossolicitantes,#tipochamado,#chamadoemaberto,#chamadofechado,#chamadohost,#principaltimeframe,#outrostimeframe,#princapaloutros_tudo,#princapaloutros_comercial,#workload,#resumodeparadas,#paradasevitadas,#paradasnaoprogramadas,#programadassestrategicas,#paradasprogramadas,#totais,#dbsize
 	{
 	page-break-inside: avoid;
 }

@@ -5,7 +5,7 @@ public class MesRelatorioVO {
 	public String mesString;
 
 	public String getLabelMes() {
-		return labelMes;
+		return this.labelMes;
 	}
 
 	public void setLabelMes(String labelMes) {
@@ -13,11 +13,10 @@ public class MesRelatorioVO {
 	}
 
 	public String getMesString() {
-		return mesString;
+		return this.mesString;
 	}
 
 	public void setMesString(String mesString) {
 		this.mesString = mesString;
 	}
-
 }

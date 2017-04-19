@@ -5,11 +5,11 @@ public class IndicacoresQtdVO {
 	private Object valor;
 
 	public String getTexto() {
-		return texto;
+		return this.texto;
 	}
 
 	public Object getValor() {
-		return valor;
+		return this.valor;
 	}
 
 	public void setTexto(String texto) {
@@ -19,5 +19,4 @@ public class IndicacoresQtdVO {
 	public void setValor(Object valor) {
 		this.valor = valor;
 	}
-
 }

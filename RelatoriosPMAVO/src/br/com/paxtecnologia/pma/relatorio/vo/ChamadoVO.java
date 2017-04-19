@@ -1,7 +1,6 @@
 package br.com.paxtecnologia.pma.relatorio.vo;
 
 public class ChamadoVO {
-
 	private String idChamado;
 	private String titulo;
 	private String dataAbertura;
@@ -13,7 +12,8 @@ public class ChamadoVO {
 	private String host;
 
 	public String getIdChamado() {
-		return idChamado;
+
+		return this.idChamado;
 	}
 
 	public void setIdChamado(String idChamado) {
@@ -21,7 +21,7 @@ public class ChamadoVO {
 	}
 
 	public String getTitulo() {
-		return titulo;
+		return this.titulo;
 	}
 
 	public void setTitulo(String titulo) {
@@ -29,7 +29,7 @@ public class ChamadoVO {
 	}
 
 	public String getDataAbertura() {
-		return dataAbertura;
+		return this.dataAbertura;
 	}
 
 	public void setDataAbertura(String dataAbertura) {
@@ -37,7 +37,7 @@ public class ChamadoVO {
 	}
 
 	public String getStatus() {
-		return status;
+		return this.status;
 	}
 
 	public void setStatus(String status) {
@@ -45,7 +45,7 @@ public class ChamadoVO {
 	}
 
 	public String getTipoChamado() {
-		return tipoChamado;
+		return this.tipoChamado;
 	}
 
 	public void setTipoChamado(String tipoChamado) {
@@ -53,7 +53,7 @@ public class ChamadoVO {
 	}
 
 	public String getDataFechamento() {
-		return dataFechamento;
+		return this.dataFechamento;
 	}
 
 	public void setDataFechamento(String dataFechamento) {
@@ -61,7 +61,7 @@ public class ChamadoVO {
 	}
 
 	public String getSolicitante() {
-		return solicitante;
+		return this.solicitante;
 	}
 
 	public void setSolicitante(String solicitante) {
@@ -69,7 +69,7 @@ public class ChamadoVO {
 	}
 
 	public Integer getSegundosTrabalhos() {
-		return segundosTrabalhos;
+		return this.segundosTrabalhos;
 	}
 
 	public void setSegundosTrabalhos(Integer segundosTrabalhos) {
@@ -77,11 +77,10 @@ public class ChamadoVO {
 	}
 
 	public String getHost() {
-		return host;
+		return this.host;
 	}
 
 	public void setHost(String host) {
 		this.host = host;
 	}
-
 }

@@ -5,7 +5,7 @@ public class ClienteVO {
 	public Integer id;
 
 	public String getNome() {
-		return nome;
+		return this.nome;
 	}
 
 	public void setNome(String nome) {
@@ -13,11 +13,10 @@ public class ClienteVO {
 	}
 
 	public Integer getId() {
-		return id;
+		return this.id;
 	}
 
 	public void setId(Integer id) {
 		this.id = id;
 	}
-
 }

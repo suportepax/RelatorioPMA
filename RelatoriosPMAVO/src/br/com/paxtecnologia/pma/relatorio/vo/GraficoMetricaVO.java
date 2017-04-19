@@ -5,7 +5,7 @@ public class GraficoMetricaVO {
 	private Integer tipoHorario;
 
 	public Integer getMetrica() {
-		return metrica;
+		return this.metrica;
 	}
 
 	public void setMetrica(Integer metrica) {
@@ -13,11 +13,10 @@ public class GraficoMetricaVO {
 	}
 
 	public Integer getTipoHorario() {
-		return tipoHorario;
+		return this.tipoHorario;
 	}
 
 	public void setTipoHorario(Integer tipoHorario) {
 		this.tipoHorario = tipoHorario;
 	}
-
 }

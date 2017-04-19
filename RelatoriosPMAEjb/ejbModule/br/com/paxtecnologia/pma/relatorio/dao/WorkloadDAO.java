@@ -6,373 +6,249 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import br.com.paxtecnologia.pma.relatorio.vo.GraficoMetricaVO;
-import br.com.paxtecnologia.pma.relatorio.vo.GraficoVO;
-import br.com.paxtecnologia.pma.relatorio.vo.HostVO;
-import br.com.paxtecnologia.pma.relatorio.vo.InstanciaVO;
-import br.com.paxtecnologia.pma.relatorio.vo.TimeFrameVO;
 import br.com.paxtecnologia.pma.relatorio.util.FormataDataUtil;
+import br.com.paxtecnologia.pma.relatorio.vo.GraficoMetricaVO;
+import br.com.paxtecnologia.pma.relatorio.vo.HostVO;
+import br.com.paxtecnologia.pma.relatorio.vo.TimeFrameVO;
 
 public class WorkloadDAO {
 	private DataSourcePMA connection;
 
-	public GraficoMetricaVO getMetrica(Integer idInstancia, Integer idGraficoControle, Integer idTf) {
-		GraficoMetricaVO retorno = new GraficoMetricaVO();
-		connection = new DataSourcePMA();
-		PreparedStatement pstmt;
-		String sql = "select t.metrica_link_id, "+
-				 	 "       t.tipo_horario_id "+
-				 	 "  from pmp_grafico g, pmp_time_frame t "+
-				 	 " where g.instancia_id = ? "+
-				 	 "   and g.grafico_controle_id = ? "+
-				 	 "   and t.time_frame_controle_id = ? "+
-				 	 "   and g.grafico_id = t.grafico_id";
-		pstmt = connection.getPreparedStatement(sql);
+	public List<TimeFrameVO> getTimeFrameAno24horasDBSize(Integer metrica, String mesRelatorio) {
+		List<TimeFrameVO> timeFrame = new ArrayList<TimeFrameVO>();
+		this.connection = new DataSourcePMA();
+
+		String sql = "select to_char(f.data,'MM/YYYY') data ,max(f.valor_medio) KEEP (DENSE_RANK LAST ORDER BY f.data ASC) valor from pmp_workload_mes f where metrica_link_id = ? and data >= trunc(add_months(to_date(?,'yyyy/mm/dd') ,-12) , 'month') and data < trunc(add_months( to_date(?,'yyyy/mm/dd') ,1) , 'month') group by to_char(f.data,'MM/YYYY') order by data";
+
+		PreparedStatement pstmt = this.connection.getPreparedStatement(sql);
 		try {
-			pstmt.setInt(1, idInstancia);
-			pstmt.setInt(2, idGraficoControle);
-			pstmt.setInt(3, idTf);
+			pstmt.setInt(1, metrica.intValue());
+			pstmt.setString(2, mesRelatorio);
+			pstmt.setString(3, mesRelatorio);
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		ResultSet rs = connection.executaQuery(pstmt);
+		ResultSet rs = this.connection.executaQuery(pstmt);
 		try {
 			while (rs.next()) {
-				retorno.setMetrica(rs.getInt("metrica_link_id"));
-				retorno.setTipoHorario(rs.getInt("tipo_horario_id"));
+				TimeFrameVO temp = new TimeFrameVO();
+				temp.setData(rs.getString("data"));
+				temp.setValor(Double.valueOf(rs.getDouble("valor")));
+				timeFrame.add(temp);
 			}
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		connection.closeConnection(pstmt);
+		this.connection.closeConnection(pstmt);
+		return timeFrame;
+	}
+
+	public List<br.com.paxtecnologia.pma.relatorio.vo.DBSizeTabelaVO> getDBSizeTabela(String paramString,
+			Integer paramInteger) {
+		throw new Error(
+				"Unresolved compilation problems: \n\tThe method setData(String) is undefined for the type DBSizeTabelaVO\n\tThe method setValor(String) is undefined for the type DBSizeTabelaVO\n");
+	}
+
+	public GraficoMetricaVO getMetrica(Integer idInstancia, Integer idGraficoControle, Integer idTf) {
+		GraficoMetricaVO retorno = new GraficoMetricaVO();
+		this.connection = new DataSourcePMA();
+
+		String sql = "select t.metrica_link_id,        t.tipo_horario_id   from pmp_grafico g, pmp_time_frame t  where g.instancia_id = ?    and g.grafico_controle_id = ?    and t.time_frame_controle_id = ?    and g.grafico_id = t.grafico_id";
+
+		PreparedStatement pstmt = this.connection.getPreparedStatement(sql);
+		try {
+			pstmt.setInt(1, idInstancia.intValue());
+			pstmt.setInt(2, idGraficoControle.intValue());
+			pstmt.setInt(3, idTf.intValue());
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		ResultSet rs = this.connection.executaQuery(pstmt);
+		try {
+			while (rs.next()) {
+				retorno.setMetrica(Integer.valueOf(rs.getInt("metrica_link_id")));
+				retorno.setTipoHorario(Integer.valueOf(rs.getInt("tipo_horario_id")));
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		this.connection.closeConnection(pstmt);
 		return retorno;
 	}
 
 	public List<TimeFrameVO> getTimeFrame24horas(Integer metrica, String mesRelatorio) {
 		List<TimeFrameVO> timeFrame = new ArrayList<TimeFrameVO>();
-		connection = new DataSourcePMA();
-		PreparedStatement pstmt;
-		String sql = "SELECT to_char(data, 'dd/mm/yyyy') data, avg(valor_medio) valor "
-				+ "FROM pmp_workload_dia "
-				+ "WHERE data between ? and ? "
-				+ "AND metrica_link_id = ? "
-				+ "GROUP BY to_char(data, 'dd/mm/yyyy') " 
-				+ "ORDER BY data";
-		pstmt = connection.getPreparedStatement(sql);
+		this.connection = new DataSourcePMA();
+
+		String sql = "SELECT to_char(data, 'dd/mm/yyyy') data, avg(valor_medio) valor FROM pmp_workload_dia WHERE data between ? and ? AND metrica_link_id = ? GROUP BY to_char(data, 'dd/mm/yyyy') ORDER BY data";
+
+		PreparedStatement pstmt = this.connection.getPreparedStatement(sql);
 		try {
 			pstmt.setDate(1, FormataDataUtil.formataDataInicio(mesRelatorio));
 			pstmt.setDate(2, FormataDataUtil.formataDataFim_dia(mesRelatorio));
-			pstmt.setInt(3, metrica);
+			pstmt.setInt(3, metrica.intValue());
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		ResultSet rs = connection.executaQuery(pstmt);
-		TimeFrameVO temp;
+		ResultSet rs = this.connection.executaQuery(pstmt);
 		try {
 			while (rs.next()) {
-				temp = new TimeFrameVO();
+				TimeFrameVO temp = new TimeFrameVO();
 				temp.setData(rs.getString("data"));
-				temp.setValor(rs.getDouble("valor"));
+				temp.setValor(Double.valueOf(rs.getDouble("valor")));
 				timeFrame.add(temp);
 			}
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		connection.closeConnection(pstmt);
+		this.connection.closeConnection(pstmt);
 		return timeFrame;
 	}
-	
+
 	public List<TimeFrameVO> getTimeFrameAno24horas(Integer metrica, String mesRelatorio) {
 		List<TimeFrameVO> timeFrame = new ArrayList<TimeFrameVO>();
-		connection = new DataSourcePMA();
-		PreparedStatement pstmt;
-		String sql = "SELECT to_char(data, 'mm/yyyy') data, avg(valor_medio) valor "
-				+ "FROM pmp_workload_mes "
-				+ "WHERE data between ? and ? "
-				+ "AND metrica_link_id = ? "
-				+ "GROUP BY to_char(data, 'mm/yyyy') "
-				+ "ORDER BY to_date(data, 'mm/yyyy')";
-		pstmt = connection.getPreparedStatement(sql);
+		this.connection = new DataSourcePMA();
+
+		String sql = "SELECT to_char(data, 'mm/yyyy') data, avg(valor_medio) valor FROM pmp_workload_mes WHERE data between ? and ? AND metrica_link_id = ? GROUP BY to_char(data, 'mm/yyyy') ORDER BY to_date(data, 'mm/yyyy')";
+
+		PreparedStatement pstmt = this.connection.getPreparedStatement(sql);
 		try {
 			pstmt.setDate(1, FormataDataUtil.formataAnoInicio(mesRelatorio));
 			pstmt.setDate(2, FormataDataUtil.formataDataFim(mesRelatorio));
-			pstmt.setInt(3, metrica);
+			pstmt.setInt(3, metrica.intValue());
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		ResultSet rs = connection.executaQuery(pstmt);
-		TimeFrameVO temp;
+		ResultSet rs = this.connection.executaQuery(pstmt);
 		try {
 			while (rs.next()) {
-				temp = new TimeFrameVO();
+				TimeFrameVO temp = new TimeFrameVO();
 				temp.setData(rs.getString("data"));
-				temp.setValor(rs.getDouble("valor"));
+				temp.setValor(Double.valueOf(rs.getDouble("valor")));
 				timeFrame.add(temp);
 			}
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		connection.closeConnection(pstmt);
+		this.connection.closeConnection(pstmt);
 		return timeFrame;
-	}	
-	
+	}
+
 	public List<TimeFrameVO> getTimeFrame(Integer metrica, String mesRelatorio, List<String> periodo) {
 		List<TimeFrameVO> timeFrame = new ArrayList<TimeFrameVO>();
-		connection = new DataSourcePMA();
-		PreparedStatement pstmt;
+		this.connection = new DataSourcePMA();
+
 		List<String> possibleValues = periodo;
 		StringBuilder builder = new StringBuilder();
-		for( int i = 0 ; i < possibleValues.size(); i++ ) {
-		    builder.append("?,");
+		for (int i = 0; i < possibleValues.size(); i++) {
+			builder.append("?,");
 		}
-		String sql = "SELECT to_char(data, 'dd/mm/yyyy') data, avg(valor_medio) valor "
-				     + "FROM pmp_workload_dia "
-				     + "WHERE data between ? and ? "
-				     + "AND metrica_link_id = ? "
-				     + "AND hora in (" + builder.deleteCharAt( builder.length() -1 ).toString() + ") "
-				     + "GROUP BY to_char(data, 'dd/mm/yyyy') ORDER BY data";
-		pstmt = connection.getPreparedStatement(sql);
+		String sql = "SELECT to_char(data, 'dd/mm/yyyy') data, avg(valor_medio) valor FROM pmp_workload_dia WHERE data between ? and ? AND metrica_link_id = ? AND hora in ("
+				+
+
+				builder.deleteCharAt(builder.length() - 1).toString() + ") "
+				+ "GROUP BY to_char(data, 'dd/mm/yyyy') ORDER BY data";
+		PreparedStatement pstmt = this.connection.getPreparedStatement(sql);
 		try {
 			pstmt.setDate(1, FormataDataUtil.formataDataInicio(mesRelatorio));
 			pstmt.setDate(2, FormataDataUtil.formataDataFim_dia(mesRelatorio));
-			pstmt.setInt(3, metrica);
+			pstmt.setInt(3, metrica.intValue());
 			int index = 4;
-			for( String o : possibleValues ) {
-			   pstmt.setString(  index++, o ); // or whatever it applies 
-			}			
+			for (String o : possibleValues) {
+				pstmt.setString(index++, o);
+			}
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		ResultSet rs = connection.executaQuery(pstmt);
-		TimeFrameVO temp;
+		ResultSet rs = this.connection.executaQuery(pstmt);
 		try {
 			while (rs.next()) {
-				temp = new TimeFrameVO();
+				TimeFrameVO temp = new TimeFrameVO();
 				temp.setData(rs.getString("data"));
-				temp.setValor(rs.getDouble("valor"));
+				temp.setValor(Double.valueOf(rs.getDouble("valor")));
 				timeFrame.add(temp);
 			}
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		connection.closeConnection(pstmt);
+		this.connection.closeConnection(pstmt);
 		return timeFrame;
 	}
 
 	public List<TimeFrameVO> getTimeFrameAno(Integer metrica, String mesRelatorio, List<String> periodo) {
 		List<TimeFrameVO> timeFrame = new ArrayList<TimeFrameVO>();
-		connection = new DataSourcePMA();
-		PreparedStatement pstmt;
+		this.connection = new DataSourcePMA();
+
 		List<String> possibleValues = periodo;
 		StringBuilder builder = new StringBuilder();
-		for( int i = 0 ; i < possibleValues.size(); i++ ) {
-		    builder.append("?,");
+		for (int i = 0; i < possibleValues.size(); i++) {
+			builder.append("?,");
 		}
-		String sql = "SELECT to_char(data, 'mm/yyyy') data, avg(valor_medio) valor "
-				+ "FROM pmp_workload_mes "
-				+ "WHERE data between ? and ? "
-				+ "AND metrica_link_id = ? "
-				+ "AND hora in (" + builder.deleteCharAt( builder.length() -1 ).toString() + ") "
+		String sql = "SELECT to_char(data, 'mm/yyyy') data, avg(valor_medio) valor FROM pmp_workload_mes WHERE trunc(data,'MM') between trunc(?,'MM') and trunc(?,'MM') AND metrica_link_id = ? AND hora in ("
+				+
+
+				builder.deleteCharAt(builder.length() - 1).toString() + ") "
 				+ "GROUP BY to_char(data, 'mm/yyyy') ORDER BY to_date(data, 'mm/yyyy')";
-		pstmt = connection.getPreparedStatement(sql);
+		PreparedStatement pstmt = this.connection.getPreparedStatement(sql);
 		try {
 			pstmt.setDate(1, FormataDataUtil.formataAnoInicio(mesRelatorio));
 			pstmt.setDate(2, FormataDataUtil.formataDataFim(mesRelatorio));
-			pstmt.setInt(3, metrica);
+			pstmt.setInt(3, metrica.intValue());
 			int index = 4;
-			for( String o : possibleValues ) {
-			   pstmt.setString(  index++, o ); // or whatever it applies 
-			}			
+			for (String o : possibleValues) {
+				pstmt.setString(index++, o);
+			}
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		ResultSet rs = connection.executaQuery(pstmt);
-		TimeFrameVO temp;
+		ResultSet rs = this.connection.executaQuery(pstmt);
 		try {
 			while (rs.next()) {
-				temp = new TimeFrameVO();
+				TimeFrameVO temp = new TimeFrameVO();
 				temp.setData(rs.getString("data"));
-				temp.setValor(rs.getDouble("valor"));
+				temp.setValor(Double.valueOf(rs.getDouble("valor")));
 				timeFrame.add(temp);
 			}
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		connection.closeConnection(pstmt);
+		this.connection.closeConnection(pstmt);
 		return timeFrame;
-	}		
-	
+	}
+
 	public String getLegenda(Integer idInstancia, Integer idGraficoControle, Integer idTf) {
-		connection = new DataSourcePMA();
-		PreparedStatement pstmt;
-		String sql = "select t.legenda "+
-				     "  from pmp_grafico g, pmp_time_frame t "+
-				     " where g.instancia_id = ? "+
-				     "   and g.grafico_controle_id = ? "+
-				     "   and t.time_frame_controle_id = ? "+
-				     "   and g.grafico_id = t.grafico_id";
-		pstmt = connection.getPreparedStatement(sql);
+		this.connection = new DataSourcePMA();
+
+		String sql = "select t.legenda   from pmp_grafico g, pmp_time_frame t  where g.instancia_id = ?    and g.grafico_controle_id = ?    and t.time_frame_controle_id = ?    and g.grafico_id = t.grafico_id";
+
+		PreparedStatement pstmt = this.connection.getPreparedStatement(sql);
 		try {
-			pstmt.setInt(1, idInstancia);
-			pstmt.setInt(2, idGraficoControle);
-			pstmt.setInt(3, idTf);
+			pstmt.setInt(1, idInstancia.intValue());
+			pstmt.setInt(2, idGraficoControle.intValue());
+			pstmt.setInt(3, idTf.intValue());
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		ResultSet rs = connection.executaQuery(pstmt);
+		ResultSet rs = this.connection.executaQuery(pstmt);
 		String legenda = null;
 		try {
 			while (rs.next()) {
 				legenda = rs.getString("legenda");
 			}
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		connection.closeConnection(pstmt);
+		this.connection.closeConnection(pstmt);
 		return legenda;
 	}
-	
-	private List<GraficoVO> getGraficos(Integer idInstancia) {
-		List<GraficoVO> grafico = new ArrayList<GraficoVO>();
-		connection = new DataSourcePMA();
-		PreparedStatement pstmt;
-		String sql = "select titulo, "+
-					 "       descricao, "+
-					 "       mes_ano, "+
-					 "       tipo_calculo_id, "+
-					 "       grafico_controle_id "+
-					 "  from pmp_grafico "+
-					 " where instancia_id = ? "+
-					 " order by grafico_controle_id";
-		pstmt = connection.getPreparedStatement(sql);
-		try {
-			pstmt.setInt(1, idInstancia);
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		ResultSet rs = connection.executaQuery(pstmt);
-		GraficoVO temp;
-		try {
-			while (rs.next()) {
-				temp = new GraficoVO();
-				temp.setTitulo(rs.getString("titulo"));
-				temp.setDescricao(rs.getString("descricao"));
-				temp.setMesAno(rs.getInt("mes_ano"));
-				temp.setTipoCalculo(rs.getInt("tipo_calculo_id"));
-				temp.setControleId(rs.getInt("grafico_controle_id"));
-				grafico.add(temp);
-			}
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		connection.closeConnection(pstmt);
-		return grafico;
+
+	public List<HostVO> getHosts(Integer paramInteger1, Integer paramInteger2) {
+		throw new Error(
+				"Unresolved compilation problems: \n\tThe method setHost(String) is undefined for the type HostVO\n\tThe method setDescricao(String) is undefined for the type HostVO\n\tThe method setHostName(String) is undefined for the type HostVO\n");
 	}
-	
-	private List<InstanciaVO> getInstancias(Integer idCliente, Integer idHost) {
-		List<InstanciaVO> instancia = new ArrayList<InstanciaVO>();
-		connection = new DataSourcePMA();
-		PreparedStatement pstmt;
-		String sql = "select i.instancia, "+
-					 "       i.instancia_id, "+
-					 "		 i.descricao " +
-					 "  from pmp_host_ambiente a, "+
-					 "       pmp_host h, "+
-					 "       pmp_instancia i "+
-					 "where h.cliente_id = ? "+
-					 "  and h.host_id = ? "+
-					 "  and a.host_id=h.host_id "+
-					 "  and i.host_ambiente_id = a.host_ambiente_id "+
-					 "  and exists (select 1 from pmp_grafico g where g.instancia_id = i.instancia_id) " +
-					 "order by instancia_id";
-		pstmt = connection.getPreparedStatement(sql);
-		try {
-			pstmt.setInt(1, idCliente);
-			pstmt.setInt(2, idHost);
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		ResultSet rs = connection.executaQuery(pstmt);
-		InstanciaVO temp;
-		try {
-			while (rs.next()) {
-				temp = new InstanciaVO();
-				temp.setInstancia(rs.getString("instancia"));
-				temp.setDescricao(rs.getString("descricao"));
-				temp.setId(rs.getInt("instancia_id"));
-				temp.setGraficoVO(getGraficos(temp.getId()));
-				instancia.add(temp);
-			}
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		connection.closeConnection(pstmt);
-		return instancia;
-	}	
-	
-	public List<HostVO> getHosts(Integer idCliente) {
-		List<HostVO> host = new ArrayList<HostVO>();
-		connection = new DataSourcePMA();
-		PreparedStatement pstmt;
-		String sql = "select h.nome_fantasia, "+
-					 "       h.host_id, " +
-					 "		 h.hostname, " +
-					 "		 h.tipo_cpu, " +
-					 "		 h.num_cpu, " +
-					 "		 h.qtd_memoria, " +
-					 "		 h.descricao "+
-					 "  from pmp_host h "+
-					 " where h.cliente_id= ? "+
-					 " and exists (select 1 from pmp_host_ambiente a, "+
-					 "                           pmp_instancia i, "+
-					 "                           pmp_grafico g "+
-					 "                     where a.host_id = h.host_id "+
-					 "                       and i.host_ambiente_id = a.host_ambiente_id "+
-					 "                       and i.instancia_id = g.instancia_id) " +
-					 " order by host_id";
-		pstmt = connection.getPreparedStatement(sql);
-		try {
-			pstmt.setInt(1, idCliente);
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		ResultSet rs = connection.executaQuery(pstmt);
-		HostVO temp;
-		try {
-			while (rs.next()) {
-				temp = new HostVO();
-				temp.setHost(rs.getString("nome_fantasia"));
-				temp.setId(rs.getInt("host_id"));
-				temp.setDescricao(rs.getString("descricao"));
-				temp.setHostName(rs.getString("hostname"));
-				temp.setQuantidadeCPU(rs.getInt("num_cpu"));
-				temp.setQuantidadeMemoria(rs.getInt("qtd_memoria"));
-				temp.setTipoCPU(rs.getString("tipo_cpu"));
-				temp.setInstanciaVO(getInstancias(idCliente,temp.getId()));
-				host.add(temp);
-			}
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		connection.closeConnection(pstmt);
-		return host;
-	}	
+
+	public List<HostVO> getHosts(Integer paramInteger) {
+		throw new Error(
+				"Unresolved compilation problems: \n\tThe method setHost(String) is undefined for the type HostVO\n\tThe method setDescricao(String) is undefined for the type HostVO\n\tThe method setHostName(String) is undefined for the type HostVO\n\tThe method setQuantidadeCPU(int) is undefined for the type HostVO\n\tThe method setQuantidadeMemoria(int) is undefined for the type HostVO\n\tThe method setTipoCPU(String) is undefined for the type HostVO\n");
+	}
 }
