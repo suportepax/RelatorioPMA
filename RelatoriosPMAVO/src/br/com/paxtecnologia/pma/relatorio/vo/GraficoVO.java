@@ -1,42 +1,104 @@
 package br.com.paxtecnologia.pma.relatorio.vo;
 
+import java.util.List;
+
+import br.com.paxtecnologia.pma.relatorio.vo2.GraficoLinhaVO;
+
 public class GraficoVO {
 	
-	private String titulo;
-	private String descricao;
-	private Integer mesAno;
-	private Integer tipoCalculo;
-	private Integer controleId;
+	private Integer graficoId;
+	private String tituloDisplayName;
+	private String descricaoAntes;
+	private String descricaoDepois;
+	private Integer ordemPlot;
+	private String descricaoCustomizada;
+	private String nickName;
+	private String capitulo;
+	private Integer tipoPeriodoId;
+
 	
-	public String getTitulo() {
-		return titulo;
+	private List<GraficoLinhaVO> graficoLinhaVO;
+
+	public Integer getGraficoId() {
+		return graficoId;
 	}
-	public void setTitulo(String titulo) {
-		this.titulo = titulo;
+
+	public void setGraficoId(Integer graficoId) {
+		this.graficoId = graficoId;
 	}
-	public String getDescricao() {
-		return descricao;
+
+	public String getTituloDisplayName() {
+		return tituloDisplayName;
 	}
-	public void setDescricao(String descricao) {
-		this.descricao = descricao;
+
+	public void setTituloDisplayName(String tituloDisplayName) {
+		this.tituloDisplayName = tituloDisplayName;
 	}
-	public Integer getMesAno() {
-		return mesAno;
+
+	public String getDescricaoAntes() {
+		return descricaoAntes;
 	}
-	public void setMesAno(Integer mesAno) {
-		this.mesAno = mesAno;
+
+	public void setDescricaoAntes(String descricaoAntes) {
+		this.descricaoAntes = descricaoAntes;
 	}
-	public Integer getTipoCalculo() {
-		return tipoCalculo;
+
+	public String getDescricaoDepois() {
+		return descricaoDepois;
 	}
-	public void setTipoCalculo(Integer tipoCalculo) {
-		this.tipoCalculo = tipoCalculo;
+
+	public void setDescricaoDepois(String descricaoDepois) {
+		this.descricaoDepois = descricaoDepois;
 	}
-	public Integer getControleId() {
-		return controleId;
+
+	public Integer getOrdemPlot() {
+		return ordemPlot;
 	}
-	public void setControleId(Integer controleId) {
-		this.controleId = controleId;
+
+	public void setOrdemPlot(Integer ordemPlot) {
+		this.ordemPlot = ordemPlot;
 	}
+
+	public String getDescricaoCustomizada() {
+		return descricaoCustomizada;
+	}
+
+	public void setDescricaoCustomizada(String descricaoCustomizada) {
+		this.descricaoCustomizada = descricaoCustomizada;
+	}
+
+	public String getNickName() {
+		return nickName;
+	}
+
+	public void setNickName(String nickName) {
+		this.nickName = nickName;
+	}
+
+	public List<GraficoLinhaVO> getGraficoLinhaVO() {
+		return graficoLinhaVO;
+	}
+
+	public void setGraficoLinhaVO(List<GraficoLinhaVO> graficoLinhaVO) {
+		this.graficoLinhaVO = graficoLinhaVO;
+	}
+
+	public String getCapitulo() {
+		return capitulo;
+	}
+
+	public void setCapitulo(String capitulo) {
+		this.capitulo = capitulo;
+	}
+
+	public Integer getTipoPeriodoId() {
+		return tipoPeriodoId;
+	}
+
+	public void setTipoPeriodoId(Integer tipoPeriodoId) {
+		this.tipoPeriodoId = tipoPeriodoId;
+	}
+
 	
+
 }

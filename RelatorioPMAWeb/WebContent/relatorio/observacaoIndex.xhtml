@@ -1,0 +1,25 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+	<div id='observacaoIndex'>
+		<h:panelGroup id="botao">
+			<h:panelGroup rendered="#{relatorioBean.update}">
+				<h:outputText value="Observação" />
+				<br />
+				<h:inputTextarea value="#{observacaoBean.observacao}" cols="49" rows="10" autoUpdate="true"/>
+				<br />
+				<br />
+				<h:panelGroup >
+					<h:commandButton
+					action="#{observacaoBean.salvar(relatorioBean.projetoJiraId, relatorioBean.mesRelatorio)}"
+					value="Salvar Observacao" rendered="#{not observacaoBean.update}" />
+				<h:commandButton
+					action="#{observacaoBean.update(relatorioBean.projetoJiraId, relatorioBean.mesRelatorio)}"
+					value="Atualizar Observacao" rendered="#{observacaoBean.update}" />
+				</h:panelGroup>
+			</h:panelGroup>
+			<h:messages id="messages"/>
+		</h:panelGroup>
+	</div>
+</ui:composition>

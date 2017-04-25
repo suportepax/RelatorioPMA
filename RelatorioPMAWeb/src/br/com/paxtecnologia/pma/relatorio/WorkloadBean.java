@@ -9,6 +9,7 @@ import javax.faces.bean.ViewScoped;
 import java.util.List;
 
 import br.com.paxtecnologia.pma.relatorio.ejb.WorkloadEjb;
+import br.com.paxtecnologia.pma.relatorio.vo.DBSizeTabelaVO;
 import br.com.paxtecnologia.pma.relatorio.vo.HostVO;
 
 @ViewScoped
@@ -31,6 +32,7 @@ public class WorkloadBean implements Serializable {
 	
 	private Integer diasNoMes;
 	private List<HostVO> hosts;
+	private List<DBSizeTabelaVO> dbSizeTabelaVO;
 
 	public void setIdCliente(Integer idCliente) {
 		this.idCliente = idCliente;
@@ -54,12 +56,29 @@ public class WorkloadBean implements Serializable {
 		}
 		return diasNoMes;
 	}
-
+	
+	public List<HostVO> getCapHosts(Integer capitulo) {
+		hosts = null;
+		if (hosts == null) {
+			hosts = workloadEjb.getHosts(idCliente,capitulo);
+		}
+		return hosts;
+	}
+	
 	public List<HostVO> getHosts() {
+		hosts = null;
 		if (hosts == null) {
 			hosts = workloadEjb.getHosts(idCliente);
 		}
 		return hosts;
 	}
+	
+	public List<DBSizeTabelaVO> getDBSizeTabela(Integer metricaLinkId){
+		
+		dbSizeTabelaVO = workloadEjb.getDBSizeTabela(mesRelatorio, metricaLinkId);
+		
+		return dbSizeTabelaVO;
+	}
+	
 	
 }

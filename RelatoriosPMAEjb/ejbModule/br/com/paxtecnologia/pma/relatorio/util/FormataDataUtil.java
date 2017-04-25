@@ -71,5 +71,31 @@ public class FormataDataUtil {
 			e.printStackTrace();
 		}
 		return dia;
+		
+		
 	}	
+	
+	
+	public static Integer getCampoMesRelatorio(String campo, String mesRelatorio){
+		
+		String dia;
+        String mes;
+        String ano;
+        
+        ano = mesRelatorio.split("-")[0];
+        mes = mesRelatorio.split("-")[1];
+        dia = mesRelatorio.split("-")[2];
+
+        if (campo.equals("dia")){
+       	return Integer.parseInt(dia); 
+        } else if (campo.equals("mes")){
+       	 return Integer.parseInt(mes);
+        } else if (campo.equals("ano")){
+       	 return Integer.parseInt(ano);
+        } else {
+       	 return null;
+        }
+		
+        
+	}
 }

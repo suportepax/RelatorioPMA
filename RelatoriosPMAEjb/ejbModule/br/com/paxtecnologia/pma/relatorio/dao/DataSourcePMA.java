@@ -10,6 +10,8 @@ import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.sql.DataSource;
 
+
+
 public class DataSourcePMA {
 
 	protected static DataSource dataSource;
@@ -42,7 +44,7 @@ public class DataSourcePMA {
 	public PreparedStatement getPreparedStatement(String sql){
 		PreparedStatement pstmt = null;
 		try {
-			pstmt=conn.prepareStatement(sql);
+			pstmt = conn.prepareStatement(sql);
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -60,8 +62,24 @@ public class DataSourcePMA {
 			e.printStackTrace();
 		}
 		return rs;
-
 	}
+	
+	public void executaUpdate(PreparedStatement pstmt) throws SQLException {
+		try {
+			pstmt.executeUpdate();
+		} catch (SQLException e) {
+			throw new  SQLException(e);
+		}
+	}
+	
+	public void executaSave(PreparedStatement pstmt) throws SQLException {
+		try {
+			pstmt.execute();
+		} catch (SQLException e) {
+			throw new SQLException(e.getSQLState());
+		}
+	}
+	
 	public Boolean closeConnection(PreparedStatement pstmt){
 		try {
 			pstmt.close();

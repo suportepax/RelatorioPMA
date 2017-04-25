@@ -9,40 +9,42 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
 
-import br.com.paxtecnologia.pma.relatorio.ejb.ClientesEjb;
+import br.com.paxtecnologia.pma.relatorio.ejb.RelatorioEjb;
 
 @ViewScoped
 @ManagedBean(name = "capaBean")
 public class CapaBean {
 
 	@EJB
-	private ClientesEjb clientesEjb;
+	private RelatorioEjb relatorioEjb;
 
-	@ManagedProperty(value = "#{clientesBean.idCliente}")
-	private Integer idCliente;
+	@ManagedProperty(value = "#{relatorioBean.relatorioId}")
+	private Integer relatorioId;
 
-	@ManagedProperty(value = "#{clientesBean.mesRelatorio}")
+	@ManagedProperty(value = "#{relatorioBean.mesRelatorio}")
 	private String mesRelatorio;
 
-	private String tituloRelatorio = "SUPORTE";
+	private String tituloRelatorio;
 	private String subtituloRelatorio;
 	private String dataCriacao;
-	private String textoVersao = "Vers„o 1.0";
+	private String textoVersao = "Vers√£o 10.0";
 	SimpleDateFormat dateFormat;
 	private String nomeCliente;
 	private String mesEAno;
 	private String logoCliente;
 
+
+	
 	public String getLogoCliente() {
 		if (logoCliente == null) {
-			logoCliente = clientesEjb.getLogoCliente(idCliente);
+			logoCliente = relatorioEjb.getLogoStr(relatorioId);
 		}
 		return logoCliente;
 	}
 
 	public String getNomeCliente() {
 		if (nomeCliente == null) {
-			nomeCliente = clientesEjb.getNomeCliente(idCliente);
+			nomeCliente = relatorioEjb.getClienteDisplayName(relatorioId);
 		}
 		return nomeCliente;
 	}
@@ -64,6 +66,7 @@ public class CapaBean {
 	}
 
 	public String getTituloRelatorio() {
+		tituloRelatorio = relatorioEjb.getTituloRelatorio(relatorioId);
 		return tituloRelatorio;
 	}
 
@@ -89,7 +92,7 @@ public class CapaBean {
 		if (dataCriacao == null) {
 			Date dataAtual = new Date();
 			dateFormat = new SimpleDateFormat("dd 'de' MMMM 'de' yyyy");
-			dataCriacao = "Data de criaÁ„o: " + dateFormat.format(dataAtual);
+			dataCriacao = "Data de cria√ß√£o: " + dateFormat.format(dataAtual);
 		}
 		return dataCriacao;
 	}
@@ -98,12 +101,22 @@ public class CapaBean {
 		return textoVersao;
 	}
 
-	public void setIdCliente(Integer idCliente) {
-		this.idCliente = idCliente;
+	public Integer getRelatorioId() {
+		return relatorioId;
+	}
+
+	public void setRelatorioId(Integer relatorioId) {
+		this.relatorioId = relatorioId;
+	}
+
+	public String getMesRelatorio() {
+		return mesRelatorio;
 	}
 
 	public void setMesRelatorio(String mesRelatorio) {
 		this.mesRelatorio = mesRelatorio;
 	}
+			
+			
 
 }

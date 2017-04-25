@@ -4,6 +4,7 @@ import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -13,6 +14,8 @@ import javax.ejb.Stateless;
 
 import br.com.paxtecnologia.pma.relatorio.dao.WorkloadDAO;
 import br.com.paxtecnologia.pma.relatorio.util.FormataDataUtil;
+import br.com.paxtecnologia.pma.relatorio.util.FormataValorUtil;
+import br.com.paxtecnologia.pma.relatorio.vo.DBSizeTabelaVO;
 import br.com.paxtecnologia.pma.relatorio.vo.GraficoMetricaVO;
 import br.com.paxtecnologia.pma.relatorio.vo.HostVO;
 import br.com.paxtecnologia.pma.relatorio.vo.TimeFrameVO;
@@ -25,6 +28,28 @@ public class WorkloadEjb {
 	private Map<String, String> controleMesCliente = new HashMap<String, String>();
 	private List<HostVO> hosts;
 	private Integer diasNoMes;
+	private Long diferenca;
+	
+	public List<DBSizeTabelaVO> getDBSizeTabela(String mesRelatorio, Integer metricaLinkId){
+
+		List<DBSizeTabelaVO> retorno = workloadDao.getDBSizeTabela(mesRelatorio, metricaLinkId);
+		
+//		Collections.sort(retorno, new DBSizeTabelaVO());	
+		
+		diferenca = Long.parseLong(retorno.get(1).getValorA()) - Long.parseLong(retorno.get(0).getValorA());
+		
+		for (DBSizeTabelaVO i : retorno) {
+			i.setValorA(FormataValorUtil.humanReadableByteCount(Long.parseLong(i.getValorA()), true));
+		}
+		
+		DBSizeTabelaVO dbSizeDif = new DBSizeTabelaVO();
+		dbSizeDif.setMesA("Variação");
+		dbSizeDif.setValorD(FormataValorUtil.humanReadableByteCount(diferenca, true));
+		retorno.add(dbSizeDif);
+		
+		return retorno; 
+		
+	}
 	
 	public String getLegenda(Integer idInstancia, Integer idGraficoControle, Integer idTf) {
 		return workloadDao.getLegenda(idInstancia, idGraficoControle, idTf);
@@ -37,6 +62,16 @@ public class WorkloadEjb {
 			controleMesCliente.put("getDiasNoMes",mesRelatorio);
 		}
 		return diasNoMes;
+	}
+	
+	public List<HostVO> getHosts(Integer idCliente, Integer capitulo) {
+		hosts = null;
+		if ((hosts == null) ||
+			(controleIdCliente.get("getHosts") != idCliente)) {
+			hosts = workloadDao.getHosts(idCliente,capitulo);
+			controleIdCliente.put("getHosts",idCliente);
+		}
+		return hosts;
 	}
 	
 	public List<HostVO> getHosts(Integer idCliente) {
@@ -69,6 +104,9 @@ public class WorkloadEjb {
 			 case 5:
 				tf = getTfCalculo0a8e18a24(graficoMetrica.getMetrica(), mesRelatorio, idGraficoControle);
 			 	break;
+			 case 6:
+				tf = getTfCalculo24horasDBSize(graficoMetrica.getMetrica(), mesRelatorio, idGraficoControle);
+				break;
 			 default:
 				break;
 			}
@@ -151,7 +189,21 @@ public class WorkloadEjb {
 			return formataTimeFramAno(timeFrameList);
 		}
 	}
+	
+	private String getTfCalculo24horasDBSize(Integer metrica, String mesRelatorio, Integer idGraficoControle) {
+		List<TimeFrameVO> timeFrameList = null;
+		if (idGraficoControle%2!=0) { //impar
+			timeFrameList = workloadDao.getTimeFrameAno24horasDBSize(
+					metrica, mesRelatorio);
+			return formataTimeFram(timeFrameList);
+		} else { //par
+			timeFrameList = workloadDao.getTimeFrameAno24horasDBSize(
+					metrica, mesRelatorio);
+			return formataTimeFramAnoDBSize(timeFrameList);
+		}
+	}
 
+	// FEITO
 	private String getTfCalculo8as18(Integer metrica, String mesRelatorio, Integer idGraficoControle) {
 		List<TimeFrameVO> timeFrameList = null;
 		List<String> periodo = new ArrayList<String>();
@@ -174,7 +226,7 @@ public class WorkloadEjb {
 			return formataTimeFramAno(timeFrameList);
 		}
 	}
-
+	//FEITO
 	private String formataTimeFram(List<TimeFrameVO> timeFrameList) {
 		String saida = "[";
 		Iterator<TimeFrameVO> itTime = timeFrameList.iterator();
@@ -198,6 +250,7 @@ public class WorkloadEjb {
 		return saida;
 	}
 
+	//FEITO
 	private String formataTimeFramAno(List<TimeFrameVO> timeFrameList) {
 		String saida = "[";
 		Iterator<TimeFrameVO> itTime = timeFrameList.iterator();
@@ -212,5 +265,26 @@ public class WorkloadEjb {
 		saida = saida.substring(0,saida.length()-1);
 		saida = saida + "]";
 		return saida;
+	}
+	
+	//FEITO	
+	private String formataTimeFramAnoDBSize(List<TimeFrameVO> timeFrameList) {
+		String saida = "[";
+		Iterator<TimeFrameVO> itTime = timeFrameList.iterator();
+		
+		Collections.sort(timeFrameList, new TimeFrameVO());
+		
+		//DecimalFormat df = new DecimalFormat("###");
+		while (itTime.hasNext()) {
+			TimeFrameVO timeFrame = itTime.next();
+				saida = saida
+						+ "["
+						+ "(new Date("+timeFrame.getData().substring(3, 7) +","+(Integer.parseInt(timeFrame.getData().substring(0, 2))-1)+")).getTime()"
+						+ "," + timeFrame.getValor() + "],";
+		}
+		saida = saida.substring(0,saida.length()-1);
+		saida = saida + "]";
+		return saida;
 	}	
+	
 }
