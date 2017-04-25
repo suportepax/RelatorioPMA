@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+<h:head>
+	<h:outputStylesheet library="css" name="capa.css" />
+	<h:outputStylesheet library="css" name="format.css" />
+	<h:outputStylesheet library="css" name="layout.css" />
+	<h:outputStylesheet library="css" name="table-style.css" />
+	<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+</h:head>
+<h:body>
+
+
+
+
+	<div id='topo'>
+		<ui:include src="relatorio/capa.xhtml" />
+	</div>
+	<div id='meio' class="quebrapagina"
+		style="background-image: url('#{resource['images:t3_l.png']}'); background-repeat:repeat-y; border-color: #ffffff; border-width: 1px; border-left-style: solid; height:auto;">
+		<div id='meio-esquerda'></div>
+		<div id='meio-direita'>
+
+			<!-- 
+		"ID"  "Tipo do Relatório"
+		1	Oracle Database PMA padrao
+		2	IIS PMA padrao
+		3	SQL PMA Server padrao
+		4	Tomcat PMA padrao
+		5	Oracle Weblogic PMA padrao
+		 -->
+
+			<h:panelGroup rendered="#{relatorioBean.tipoRelatorioId == 1}">
+				<ui:include src="relatorio/oracle_db_pma_padrao/sumario.xhtml" />
+			</h:panelGroup>
+
+			<h:panelGroup rendered="#{relatorioBean.tipoRelatorioId == 3}">
+				<ui:include src="relatorio/sql_server_pma_padrao/sumario.xhtml" />
+			</h:panelGroup>
+
+			<h:panelGroup rendered="#{relatorioBean.tipoRelatorioId == 2}">
+				<ui:include src="relatorio/iis_pma_padrao/sumario.xhtml" />
+			</h:panelGroup>
+
+
+			<ui:include src="relatorio/introducao.xhtml" />
+			<ui:include src="relatorio/resumoatendimento.xhtml" />
+
+			<h:panelGroup rendered="#{relatorioBean.tipoRelatorioId == 1}">
+
+				<ui:include src="relatorio/oracle_db_pma_padrao/3workload.xhtml" />
+				<ui:include src="relatorio/oracle_db_pma_padrao/4dbsize.xhtml" />
+				<ui:include
+					src="relatorio/oracle_db_pma_padrao/resumodeparadas.xhtml" />
+
+			</h:panelGroup>
+
+			<h:panelGroup rendered="#{relatorioBean.tipoRelatorioId == 3}">
+
+				<ui:include src="relatorio/sql_server_pma_padrao/3workload.xhtml" />
+				<ui:include src="relatorio/sql_server_pma_padrao/4dbsize.xhtml" />
+				<ui:include
+					src="relatorio/sql_server_pma_padrao/resumodeparadas.xhtml" />
+
+			</h:panelGroup>
+
+			<h:panelGroup rendered="#{relatorioBean.tipoRelatorioId == 2}">
+
+				<ui:include src="relatorio/iis_pma_padrao/3workload.xhtml" />
+
+				<ui:include src="relatorio/iis_pma_padrao/resumodeparadas.xhtml" />
+
+			</h:panelGroup>
+
+			<ui:include src="relatorio/observacao.xhtml" />
+		</div>
+	</div>
+	<div id='rodape'>
+		<ui:include src="relatorio/rodape.xhtml" />
+	</div>
+
+
+
+
+</h:body>
+</html>
