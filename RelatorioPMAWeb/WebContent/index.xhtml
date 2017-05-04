@@ -35,25 +35,28 @@ h1 {
 		<br />
 		<h:selectOneMenu id="Clientes" value="#{relatorioBean.relatorioId}"
 			valueChangeListener="#{relatorioBean.updateListaMes}"
-			onchange="submit()" hideNoSelectionOption="true" elementUpdate=":botao">
+			onchange="submit()" hideNoSelectionOption="true"
+			elementUpdate=":botao">
 			<f:selectItem itemLabel="Escolha um Relatório" itemValue="0"
 				noSelectionOption="true" />
 			<f:selectItems value="#{relatorioBean.listaRelatoriosMenu}" var="i"
 				itemLabel="#{i.menuEntry}" itemValue="#{i.relatorioId}" />
-			
+
 		</h:selectOneMenu>
 		<h:selectOneMenu id="MesRelatorio"
 			value="#{relatorioBean.mesRelatorio}" hideNoSelectionOption="true"
-			onchange="submit()" rendered="#{relatorioBean.update}" >
+			onchange="submit()" rendered="#{relatorioBean.update}">
 			<f:selectItem itemLabel="Escolha um mês" itemValue="0"
 				noSelectionOption="true" />
 			<f:selectItems value="#{relatorioBean.listaMes}" var="i"
 				itemLabel="#{i.labelMes}" itemValue="#{i.mesString}" />
-<!-- 			<f:ajax event="valueChange" render="botao" -->
-<!-- 				listener="#{observacaoBean.pegaObservacao(relatorioBean.projetoJiraId, relatorioBean.mesRelatorio)}" /> -->
+			<!-- 			<f:ajax event="valueChange" render="botao" -->
+			<!-- 				listener="#{observacaoBean.pegaObservacao(relatorioBean.projetoJiraId, relatorioBean.mesRelatorio)}" /> -->
 		</h:selectOneMenu>
+
 		<h:commandButton id="reportButton" action="report" value="Gerar"
-			rendered="#{relatorioBean.update}" />
+			rendered="#{relatorioBean.update}"
+			onclick="this.form.target='_blank'" onblur="this.form.target='_self'" />
 		<br />
 		<br />
 		<ui:include src="/relatorio/observacaoIndex.xhtml" />
