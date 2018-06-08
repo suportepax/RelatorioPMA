@@ -7,19 +7,20 @@
 			<h:panelGroup rendered="#{relatorioBean.update}">
 				<h:outputText value="Observação" />
 				<br />
-				<h:inputTextarea value="#{observacaoBean.observacao}" cols="49" rows="10" autoUpdate="true"/>
+				<h:inputTextarea value="#{observacaoBean.observacao}" cols="70"
+					rows="10" autoUpdate="true" />
 				<br />
 				<br />
-				<h:panelGroup >
-					<h:commandButton
-					action="#{observacaoBean.salvar(relatorioBean.projetoJiraId, relatorioBean.mesRelatorio)}"
-					value="Salvar Observacao" rendered="#{not observacaoBean.update}" />
-				<h:commandButton
-					action="#{observacaoBean.update(relatorioBean.projetoJiraId, relatorioBean.mesRelatorio)}"
-					value="Atualizar Observacao" rendered="#{observacaoBean.update}" />
+				<h:panelGroup>
+					<h:commandButton rendered="#{not observacaoBean.update}"
+						action="#{observacaoBean.salvar(relatorioBean.projetoJiraId, relatorioBean.mesRelatorio)}"
+						value="Salvar Observacao" />
+					<h:commandButton rendered="#{observacaoBean.update}"
+						action="#{observacaoBean.update(relatorioBean.projetoJiraId, relatorioBean.mesRelatorio)}"
+						value="Atualizar Observacao" />
 				</h:panelGroup>
 			</h:panelGroup>
-			<h:messages id="messages"/>
+			<h:messages id="messages" />
 		</h:panelGroup>
 	</div>
 </ui:composition>

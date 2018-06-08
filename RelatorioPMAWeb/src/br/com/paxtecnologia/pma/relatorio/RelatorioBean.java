@@ -15,7 +15,7 @@ import br.com.paxtecnologia.pma.relatorio.vo2.RelatorioVO;
 
 @SessionScoped
 @ManagedBean(name = "relatorioBean")
-public class RelatorioBean { 
+public class RelatorioBean {
 
 	@EJB
 	private RelatorioEjb relatorioEjb;
@@ -31,14 +31,15 @@ public class RelatorioBean {
 	private String logoStr;
 	private String clienteDisplayName;
 	private Integer tipoRelatorioId;
-	
-	@ManagedProperty(value="#{observacaoBean}")
+	private RelatorioVO relatorio;
+
+	@ManagedProperty(value = "#{observacaoBean}")
 	private ObservacaoBean observacao;
-	
+
 	public ObservacaoBean getObservacao() {
 		return observacao;
 	}
-	
+
 	public void setObservacao(ObservacaoBean observacao) {
 		this.observacao = observacao;
 	}
@@ -105,7 +106,7 @@ public class RelatorioBean {
 	}
 
 	public void setProjetoJiraId(Integer projetoJiraId) {
-		
+
 		this.projetoJiraId = projetoJiraId;
 	}
 
@@ -120,20 +121,21 @@ public class RelatorioBean {
 	public RelatorioVO getRelatorioById(Integer id, String mesRelatorio) {
 		RelatorioVO retorno = null;
 		retorno = relatorioEjb.getRelatorioById(id, mesRelatorio);
-		
-		//O indice Observação sempre vem do banco, independente de se há ou não uma observação escrita,
-		//Por isso há a necessidade de se fazer o controle abaixo
+
+		// O indice Observação sempre vem do banco, independente de se há ou não uma
+		// observação escrita,
+		// Por isso há a necessidade de se fazer o controle abaixo
 		if (!observacao.getUpdate() && retorno.getCapituloVO().size() > 0) {
 			CapituloVO capituloObs = null;
-			for (int i = retorno.getCapituloVO().size() - 1; i > 0 ; i--) {
-				if (retorno.getCapituloVO().get(i).getDisplay_name().equals("Observação")) {
-					capituloObs = retorno.getCapituloVO().get(i);
+			for (CapituloVO capitulo : retorno.getCapituloVO()) {
+				if (capitulo.getDisplay_name().equals("Observação")) {
+					capituloObs = capitulo;
 					break;
 				}
 			}
 			retorno.getCapituloVO().remove(capituloObs);
 		}
-		return retorno ;
+		return retorno;
 	}
 
 	public String getTituloCapa() {
@@ -170,6 +172,14 @@ public class RelatorioBean {
 
 	public void getTipoRelatorioId(String nome) {
 		this.nome = nome;
+	}
+
+	public RelatorioVO getRelatorio() {
+		return relatorio;
+	}
+
+	public void setRelatorio(RelatorioVO relatorio) {
+		this.relatorio = relatorio;
 	}
 
 }

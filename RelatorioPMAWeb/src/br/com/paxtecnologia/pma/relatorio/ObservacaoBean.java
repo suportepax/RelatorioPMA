@@ -22,11 +22,7 @@ public class ObservacaoBean {
 	public void pegaObservacao(Integer idCliente, String mesRelatorio) {
 		if (idCliente != null && mesRelatorio != null && !mesRelatorio.equals("0")) {
 			observacao = observacaoEJB.getObservacao(idCliente, mesRelatorio);
-			if (observacao != null) {
-				update = true;
-			} else {
-				update = false;
-			}
+			update = observacao != null;
 		}
 	}
 

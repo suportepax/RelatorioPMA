@@ -1,0 +1,122 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+	<div id="vpn">
+		<p class="sub-titulo1">4. Teste</p>
+		<p class="sub-titulo2">4.1 Acesso usuários</p>
+	
+		<h:dataTable value="#{vpnBean.acessoUsuarios}"
+			var="i" styleClass="default-table" headerClass="default-table-header"
+			rowClasses="default-table-odd-row,default-table-even-row"
+			footerClass="default-table-footer"
+			columnClasses="celluleCenter"
+			rendered="#{!empty vpnBean.acessoUsuarios}">
+
+			<h:column>
+				<f:facet name="header">Acesso mes</f:facet>
+				<h:outputText value="#{i.acessoMes}" />
+			</h:column>
+
+			<h:column>
+				<f:facet name="header">Sem acesso</f:facet>
+				<h:outputText value="#{i.semAcesso}" />
+			</h:column>
+			
+			<h:column>
+				<f:facet name="header">Total usuários</f:facet>
+				<h:outputText value="#{i.totalUsuarios}" />
+			</h:column>
+
+		</h:dataTable>
+		
+		<p class="sub-titulo2">4.1 Acesso usuários por dia top 10</p>
+		
+		<h:dataTable value="#{vpnBean.acessoUsuariosDia}"
+			var="i" styleClass="default-table" headerClass="default-table-header"
+			rowClasses="default-table-odd-row,default-table-even-row"
+			footerClass="default-table-footer"
+			columnClasses="celluleCenter"
+			rendered="#{!empty vpnBean.acessoUsuariosDia}">
+
+			<h:column>
+				<f:facet name="header">Usuário</f:facet>
+				<h:outputText value="#{i.key}" />
+			</h:column>
+
+			<h:column>
+				<f:facet name="header">Quantidade</f:facet>
+				<h:outputText value="#{i.value}" />
+			</h:column>
+
+		</h:dataTable>
+		
+		<p class="sub-titulo2">4.2 Tempo total conectado #{vpnBean.humanReadableTime(vpnBean.segundosConectados)}</p>
+		<p class="sub-titulo2">4.3 Tempo total conectado top 10 usuarios</p>
+		
+		<h:dataTable value="#{vpnBean.segundosConectadosTop}"
+			var="i" styleClass="default-table" headerClass="default-table-header"
+			rowClasses="default-table-odd-row,default-table-even-row"
+			footerClass="default-table-footer"
+			columnClasses="celluleCenter"
+			rendered="#{!empty vpnBean.segundosConectadosTop}">
+
+			<h:column>
+				<f:facet name="header">Usuário</f:facet>
+				<h:outputText value="#{i.key}" />
+			</h:column>
+
+			<h:column>
+				<f:facet name="header">Tempo</f:facet>
+				<h:outputText value="#{vpnBean.humanReadableTime(i.value)}" />
+			</h:column>
+
+		</h:dataTable>
+		
+		<p class="sub-titulo2">4.4 Upload total #{vpnBean.humanRedable(vpnBean.upload)}</p>
+		<p class="sub-titulo2">4.5 Upload top 10 usuarios</p>
+		
+		<h:dataTable value="#{vpnBean.uploadTop}"
+			var="i" styleClass="default-table" headerClass="default-table-header"
+			rowClasses="default-table-odd-row,default-table-even-row"
+			footerClass="default-table-footer"
+			columnClasses="celluleCenter"
+			rendered="#{!empty vpnBean.uploadTop}">
+
+			<h:column>
+				<f:facet name="header">Usuário</f:facet>
+				<h:outputText value="#{i.key}" />
+			</h:column>
+
+			<h:column>
+				<f:facet name="header">Total</f:facet>
+				<h:outputText value="#{vpnBean.humanRedable(i.value)}" />
+			</h:column>
+
+		</h:dataTable>
+		
+		<p class="sub-titulo2">4.6 Download total #{vpnBean.humanRedable(vpnBean.download)}</p>
+		<p class="sub-titulo2">4.7 Download top 10 usuarios</p>
+		
+		<h:dataTable value="#{vpnBean.downloadTop}"
+			var="i" styleClass="default-table" headerClass="default-table-header"
+			rowClasses="default-table-odd-row,default-table-even-row"
+			footerClass="default-table-footer"
+			columnClasses="celluleCenter"
+			rendered="#{!empty vpnBean.downloadTop}">
+
+			<h:column>
+				<f:facet name="header">Usuário</f:facet>
+				<h:outputText value="#{i.key}" />
+			</h:column>
+
+			<h:column>
+				<f:facet name="header">Total</f:facet>
+				<h:outputText value="#{vpnBean.humanRedable(i.value)}" />
+			</h:column>
+
+		</h:dataTable>
+		
+	</div>
+</ui:composition>

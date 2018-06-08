@@ -18,8 +18,12 @@ h1 {
 	text-align: center;
 }
 
-#botao {
-	margin-right: 50%;
+.btn-margin {
+	margin-left: .5%;
+}
+
+.btn-generate {
+	padding: .1%;
 }
 
 #pax {
@@ -41,24 +45,23 @@ h1 {
 				noSelectionOption="true" />
 			<f:selectItems value="#{relatorioBean.listaRelatoriosMenu}" var="i"
 				itemLabel="#{i.menuEntry}" itemValue="#{i.relatorioId}" />
-
 		</h:selectOneMenu>
-		<h:selectOneMenu id="MesRelatorio"
+
+		<h:selectOneMenu id="MesRelatorio" class="btn-margin"
 			value="#{relatorioBean.mesRelatorio}" hideNoSelectionOption="true"
 			onchange="submit()" rendered="#{relatorioBean.update}">
 			<f:selectItem itemLabel="Escolha um mês" itemValue="0"
 				noSelectionOption="true" />
 			<f:selectItems value="#{relatorioBean.listaMes}" var="i"
 				itemLabel="#{i.labelMes}" itemValue="#{i.mesString}" />
-			<!-- 			<f:ajax event="valueChange" render="botao" -->
-			<!-- 				listener="#{observacaoBean.pegaObservacao(relatorioBean.projetoJiraId, relatorioBean.mesRelatorio)}" /> -->
 		</h:selectOneMenu>
 
-		<h:commandButton id="reportButton" action="report" value="Gerar"
-			rendered="#{relatorioBean.update}"
+		<h:commandButton id="reportButton" class="btn-generate btn-margin"
+			action="report" value="Gerar" rendered="#{relatorioBean.update}"
 			onclick="this.form.target='_blank'" onblur="this.form.target='_self'" />
 		<br />
 		<br />
+
 		<ui:include src="/relatorio/observacaoIndex.xhtml" />
 	</h:form>
 </h:body>
