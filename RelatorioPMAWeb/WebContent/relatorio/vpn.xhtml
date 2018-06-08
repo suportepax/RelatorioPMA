@@ -4,8 +4,8 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets">
 
 	<div id="vpn">
-		<p class="sub-titulo1">4. Teste</p>
-		<p class="sub-titulo2">4.1 Acesso usuários</p>
+		<p class="sub-titulo1">3. Resumo VPN</p>
+		<p class="sub-titulo2">3.1 Acesso usuários</p>
 	
 		<h:dataTable value="#{vpnBean.acessoUsuarios}"
 			var="i" styleClass="default-table" headerClass="default-table-header"
@@ -31,7 +31,7 @@
 
 		</h:dataTable>
 		
-		<p class="sub-titulo2">4.1 Acesso usuários por dia top 10</p>
+		<p class="sub-titulo2">3.2 Acesso usuários por dia top 10</p>
 		
 		<h:dataTable value="#{vpnBean.acessoUsuariosDia}"
 			var="i" styleClass="default-table" headerClass="default-table-header"
@@ -52,8 +52,8 @@
 
 		</h:dataTable>
 		
-		<p class="sub-titulo2">4.2 Tempo total conectado #{vpnBean.humanReadableTime(vpnBean.segundosConectados)}</p>
-		<p class="sub-titulo2">4.3 Tempo total conectado top 10 usuarios</p>
+		<p class="sub-titulo2">3.3 Tempo total conectado #{vpnBean.humanReadableTime(vpnBean.segundosConectados)}</p>
+		<p class="sub-titulo2">3.4 Tempo total conectado top 10 usuarios</p>
 		
 		<h:dataTable value="#{vpnBean.segundosConectadosTop}"
 			var="i" styleClass="default-table" headerClass="default-table-header"
@@ -74,8 +74,8 @@
 
 		</h:dataTable>
 		
-		<p class="sub-titulo2">4.4 Upload total #{vpnBean.humanRedable(vpnBean.upload)}</p>
-		<p class="sub-titulo2">4.5 Upload top 10 usuarios</p>
+		<p class="sub-titulo2">3.5 Upload total #{vpnBean.humanRedable(vpnBean.upload)}</p>
+		<p class="sub-titulo2">3.6 Upload top 10 usuarios</p>
 		
 		<h:dataTable value="#{vpnBean.uploadTop}"
 			var="i" styleClass="default-table" headerClass="default-table-header"
@@ -96,8 +96,8 @@
 
 		</h:dataTable>
 		
-		<p class="sub-titulo2">4.6 Download total #{vpnBean.humanRedable(vpnBean.download)}</p>
-		<p class="sub-titulo2">4.7 Download top 10 usuarios</p>
+		<p class="sub-titulo2">3.7 Download total #{vpnBean.humanRedable(vpnBean.download)}</p>
+		<p class="sub-titulo2">3.8 Download top 10 usuarios</p>
 		
 		<h:dataTable value="#{vpnBean.downloadTop}"
 			var="i" styleClass="default-table" headerClass="default-table-header"
