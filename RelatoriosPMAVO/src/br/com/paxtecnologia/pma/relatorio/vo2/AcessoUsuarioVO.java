@@ -1,6 +1,6 @@
 package br.com.paxtecnologia.pma.relatorio.vo2;
 
-public class AcessoUsuario {
+public class AcessoUsuarioVO {
 
 	private Double acessoMes;
 	private Double semAcesso;

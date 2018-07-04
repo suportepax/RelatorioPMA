@@ -3,7 +3,6 @@ package br.com.paxtecnologia.pma.relatorio;
 import java.util.ArrayList;
 import java.util.List;
 
-
 import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
@@ -46,8 +45,7 @@ public class AtendimentoBean {
 	private String porcentoFechados;
 	private Double porcentagemAbertoTipo;
 	private Double porcentagemFechadoTipo;
-//	private String tempoMedio;
-
+	// private String tempoMedio;
 
 	public Integer getQtdeChamadosAbertos() {
 		if (qtdeChamadosAbertos == null) {
@@ -85,17 +83,17 @@ public class AtendimentoBean {
 		}
 		return porcentoEmAbertos;
 	}
-	
-//	public String getTempoMedio(){
-//		if (tempoMedio == null){
-//			Double tempo = atendimentoEjb.getTempoMedio(projetoJiraId, mesRelatorio);
-//			tempoMedio = FormataValorUtil.converterDoubleString(tempo) + " h";
-//		}
-//		return tempoMedio;
-//	}
+
+	// public String getTempoMedio(){
+	// if (tempoMedio == null){
+	// Double tempo = atendimentoEjb.getTempoMedio(projetoJiraId, mesRelatorio);
+	// tempoMedio = FormataValorUtil.converterDoubleString(tempo) + " h";
+	// }
+	// return tempoMedio;
+	// }
 
 	public List<IndicacoresQtdVO> getListaGeral() {
-		List<IndicacoresQtdVO> listaGeral = new ArrayList<IndicacoresQtdVO>();
+		ArrayList<IndicacoresQtdVO> listaGeral = new ArrayList<IndicacoresQtdVO>();
 
 		IndicacoresQtdVO a = new IndicacoresQtdVO();
 		a.setTexto("Número de Chamados Abertos");
@@ -112,10 +110,10 @@ public class AtendimentoBean {
 		c.setValor(getPorcentoFechados());
 		listaGeral.add(c);
 
-//		IndicacoresQtdVO d = new IndicacoresQtdVO();
-//		d.setTexto("Tempo Médio para solucionar (em Horas)");
-//		d.setValor(getTempoMedio());
-//		listaGeral.add(d);
+		// IndicacoresQtdVO d = new IndicacoresQtdVO();
+		// d.setTexto("Tempo Médio para solucionar (em Horas)");
+		// d.setValor(getTempoMedio());
+		// listaGeral.add(d);
 
 		IndicacoresQtdVO e = new IndicacoresQtdVO();
 		e.setTexto("Número de Chamados em Aberto");
@@ -134,21 +132,23 @@ public class AtendimentoBean {
 
 	public List<ChamadoQuantidadeVO> getListaSolicitante() {
 		if (listaSolicitante == null) {
-			listaSolicitante = atendimentoEjb.getListaSolicitantes(projetoJiraId,mesRelatorio);
+			listaSolicitante = atendimentoEjb.getListaSolicitantes(projetoJiraId, mesRelatorio);
 		}
 		return listaSolicitante;
 	}
 
 	public Integer getQtdeChamadosAbertosSolicitante() {
 		if (qtdeChamadosAbertosSolicitante == null) {
-			qtdeChamadosAbertosSolicitante = atendimentoEjb.getQtdeChamadosAbertosSolicitante(projetoJiraId, mesRelatorio);
+			qtdeChamadosAbertosSolicitante = atendimentoEjb.getQtdeChamadosAbertosSolicitante(projetoJiraId,
+					mesRelatorio);
 		}
 		return qtdeChamadosAbertosSolicitante;
 	}
 
 	public Integer getQtdeChamadosFechadosSolicitante() {
 		if (qtdeChamadosFechadosSolicitante == null) {
-			qtdeChamadosFechadosSolicitante = atendimentoEjb.getQtdeChamadosFechadosSolicitante(projetoJiraId, mesRelatorio);
+			qtdeChamadosFechadosSolicitante = atendimentoEjb.getQtdeChamadosFechadosSolicitante(projetoJiraId,
+					mesRelatorio);
 		}
 		return qtdeChamadosFechadosSolicitante;
 	}
@@ -221,7 +221,7 @@ public class AtendimentoBean {
 	//
 
 	public Integer getQtdeChamadosEmAbertos() {
-		if(qtdeChamadosEmAbertos == null){
+		if (qtdeChamadosEmAbertos == null) {
 			qtdeChamadosEmAbertos = atendimentoEjb.getQtdeChamadosEmAberto(projetoJiraId, mesRelatorio);
 		}
 		return qtdeChamadosEmAbertos;
@@ -258,6 +258,4 @@ public class AtendimentoBean {
 		this.projetoJiraId = projetoJiraId;
 	}
 
-	
-	
 }

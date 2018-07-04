@@ -3,7 +3,7 @@ package br.com.paxtecnologia.pma.relatorio.vo2;
 public class KeyValue {
 
 	private String key;
-	private Double value;
+	private String value;
 
 	public String getKey() {
 		return key;
@@ -13,11 +13,11 @@ public class KeyValue {
 		this.key = key;
 	}
 
-	public Double getValue() {
+	public String getValue() {
 		return value;
 	}
 
-	public void setValue(Double value) {
+	public void setValue(String value) {
 		this.value = value;
 	}
 

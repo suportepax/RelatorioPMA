@@ -6,42 +6,11 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import br.com.paxtecnologia.pma.relatorio.vo2.AcessoUsuario;
+import br.com.paxtecnologia.pma.relatorio.vo2.EstatisticaGeralVO;
 import br.com.paxtecnologia.pma.relatorio.vo2.KeyValue;
 
 public class VpnDAO {
 	private DataSourcePMA connection;
-
-	public AcessoUsuario acessoUsuario(Integer projetoJiraId, String mesRelatorio) {
-		AcessoUsuario retorno = null;
-		connection = new DataSourcePMA();
-		PreparedStatement pstmt = null;
-		try {
-			String sql = "SELECT a.acesso_mes acessoMes, b.total_users - a.acesso_mes semAcesso, b.total_users total "
-					+ "FROM (SELECT COUNT (DISTINCT usuario) acesso_mes FROM PAXREL.PMP_FORNAX_VPN) a, PAXREL.PMP_TOTAL_VPN b "
-					+ "WHERE data_insert = ADD_MONTHS (TRUNC (SYSDATE, 'mm'), -1)";
-			pstmt = connection.getPreparedStatement(sql);
-//			pstmt.setString(1, mesRelatorio);
-			ResultSet rs = connection.executaQuery(pstmt);
-			retorno = new AcessoUsuario();
-			while (rs.next()) {
-				retorno.setAcessoMes(rs.getDouble("acessoMes"));
-				retorno.setSemAcesso(rs.getDouble("semAcesso"));
-				retorno.setTotalUsuarios(rs.getDouble("total"));
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-		} finally {
-			if (pstmt != null) {
-				try {
-					pstmt.close();
-				} catch (SQLException e) {
-					e.printStackTrace();
-				}
-			}
-		}
-		return retorno;
-	}
 
 	public List<KeyValue> acessoUsuariosDia() {
 		List<KeyValue> retorno = null;
@@ -57,7 +26,7 @@ public class VpnDAO {
 			while (rs.next()) {
 				KeyValue kv = new KeyValue();
 				kv.setKey(rs.getString("usuario"));
-				kv.setValue(rs.getDouble("num"));
+				kv.setValue(Double.toString(rs.getDouble("num")));
 				retorno.add(kv);
 			}
 		} catch (SQLException e) {
@@ -88,7 +57,7 @@ public class VpnDAO {
 			while (rs.next()) {
 				KeyValue kv = new KeyValue();
 				kv.setKey(rs.getString("usuario"));
-				kv.setValue(rs.getDouble("segundos"));				
+				kv.setValue(Integer.toString(rs.getInt("segundos")));
 				retorno.add(kv);
 			}
 		} catch (SQLException e) {
@@ -119,7 +88,7 @@ public class VpnDAO {
 			while (rs.next()) {
 				KeyValue kv = new KeyValue();
 				kv.setKey(rs.getString("usuario"));
-				kv.setValue(rs.getDouble("bytes"));
+				kv.setValue(Double.toString(rs.getDouble("bytes")));
 				retorno.add(kv);
 			}
 		} catch (SQLException e) {
@@ -150,7 +119,7 @@ public class VpnDAO {
 			while (rs.next()) {
 				KeyValue kv = new KeyValue();
 				kv.setKey(rs.getString("usuario"));
-				kv.setValue(rs.getDouble("bytes"));
+				kv.setValue(Double.toString(rs.getDouble("bytes")));
 				retorno.add(kv);
 			}
 		} catch (SQLException e) {
@@ -167,66 +136,32 @@ public class VpnDAO {
 		return retorno;
 	}
 
-	public Integer segundosConectados() {
-		Integer retorno = null;
+	public List<EstatisticaGeralVO> estatisticaGeral() {
+		List<EstatisticaGeralVO> retorno = null;
 		connection = new DataSourcePMA();
 		PreparedStatement pstmt = null;
 		try {
-			String sql = "SELECT sum(segundos_con) segundos FROM PAXREL.PMP_FORNAX_VPN";
-			pstmt = connection.getPreparedStatement(sql);
-			ResultSet rs = connection.executaQuery(pstmt);
-			while (rs.next()) {
-				retorno = rs.getInt("segundos");
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-		} finally {
-			if (pstmt != null) {
-				try {
-					pstmt.close();
-				} catch (SQLException e) {
-					e.printStackTrace();
-				}
-			}
-		}
-		return retorno;
-	}
+			String sql = "SELECT a.acesso_mes, b.total_users - a.acesso_mes sem_acesso, b.total_users, segundos , Ubytes, Dbytes "
+					+ "FROM (SELECT COUNT (DISTINCT usuario) acesso_mes FROM PAXREL.PMP_FORNAX_VPN) a, "
+					+ "PAXREL.PMP_TOTAL_VPN b, " + "(SELECT SUM (segundos_con) segundos FROM PAXREL.PMP_FORNAX_VPN) c, "
+					+ "(SELECT SUM (upload) Ubytes FROM PAXREL.PMP_FORNAX_VPN) d, "
+					+ "(SELECT SUM (download) Dbytes FROM PAXREL.PMP_FORNAX_VPN) e "
+					+ "WHERE data_insert = ADD_MONTHS (TRUNC (SYSDATE, 'mm'), -1)";
 
-	public Double download() {
-		Double retorno = null;
-		connection = new DataSourcePMA();
-		PreparedStatement pstmt = null;
-		try {
-			String sql = "SELECT sum(download) bytes FROM PAXREL.PMP_FORNAX_VPN";
 			pstmt = connection.getPreparedStatement(sql);
 			ResultSet rs = connection.executaQuery(pstmt);
-			while (rs.next()) {
-				retorno = rs.getDouble("bytes");
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-		} finally {
-			if (pstmt != null) {
-				try {
-					pstmt.close();
-				} catch (SQLException e) {
-					e.printStackTrace();
-				}
-			}
-		}
-		return retorno;
-	}
 
-	public Double upload() {
-		Double retorno = null;
-		connection = new DataSourcePMA();
-		PreparedStatement pstmt = null;
-		try {
-			String sql = "SELECT sum(upload) bytes FROM PAXREL.PMP_FORNAX_VPN";
-			pstmt = connection.getPreparedStatement(sql);
-			ResultSet rs = connection.executaQuery(pstmt);
+			retorno = new ArrayList<EstatisticaGeralVO>();
 			while (rs.next()) {
-				retorno = rs.getDouble("bytes");
+				EstatisticaGeralVO a = new EstatisticaGeralVO();
+				a = new EstatisticaGeralVO();
+				a.setAcessoMes(rs.getInt("acesso_mes"));
+				a.setSemAcesso(rs.getInt("sem_acesso"));
+				a.setTotalUsuarios(rs.getInt("total_users"));
+				a.setSegundos(rs.getInt("segundos"));
+				a.setDownloadBytes(rs.getDouble("Dbytes"));
+				a.setUploadBytes(rs.getDouble("Ubytes"));
+				retorno.add(a);
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();

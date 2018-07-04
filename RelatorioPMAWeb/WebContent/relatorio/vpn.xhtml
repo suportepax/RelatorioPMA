@@ -5,17 +5,17 @@
 
 	<div id="vpn">
 		<p class="sub-titulo1">3. Resumo VPN</p>
-		<p class="sub-titulo2">3.1 Acesso usuários</p>
-	
-		<h:dataTable value="#{vpnBean.acessoUsuarios}"
+		<p class="sub-titulo2">3.1 Estatítica geral</p>
+		
+		<h:dataTable value="#{vpnBean.estatisticaGeral}"
 			var="i" styleClass="default-table" headerClass="default-table-header"
 			rowClasses="default-table-odd-row,default-table-even-row"
 			footerClass="default-table-footer"
 			columnClasses="celluleCenter"
-			rendered="#{!empty vpnBean.acessoUsuarios}">
+			rendered="#{!empty vpnBean.estatisticaGeral}">
 
 			<h:column>
-				<f:facet name="header">Acesso mes</f:facet>
+				<f:facet name="header">Acesso mês</f:facet>
 				<h:outputText value="#{i.acessoMes}" />
 			</h:column>
 
@@ -28,10 +28,25 @@
 				<f:facet name="header">Total usuários</f:facet>
 				<h:outputText value="#{i.totalUsuarios}" />
 			</h:column>
+			
+			<h:column>
+				<f:facet name="header">Tempo conectado</f:facet>
+				<h:outputText value="#{i.hrSegundos}" />
+			</h:column>
+			
+			<h:column>
+				<f:facet name="header">Total download</f:facet>
+				<h:outputText value="#{i.hrDownload}" />
+			</h:column>
+			
+			<h:column>
+				<f:facet name="header">Total upload</f:facet>
+				<h:outputText value="#{i.hrUpload}" />
+			</h:column>
 
 		</h:dataTable>
 		
-		<p class="sub-titulo2">3.2 Acesso usuários por dia top 10</p>
+		<p class="sub-titulo2">3.2 Quantidade acessos mês - top 10</p>
 		
 		<h:dataTable value="#{vpnBean.acessoUsuariosDia}"
 			var="i" styleClass="default-table" headerClass="default-table-header"
@@ -47,13 +62,12 @@
 
 			<h:column>
 				<f:facet name="header">Quantidade</f:facet>
-				<h:outputText value="#{i.value}" />
+				<h:outputText value="#{vpnBean.parseIntString(i.value)}" />
 			</h:column>
 
 		</h:dataTable>
 		
-		<p class="sub-titulo2">3.3 Tempo total conectado #{vpnBean.humanReadableTime(vpnBean.segundosConectados)}</p>
-		<p class="sub-titulo2">3.4 Tempo total conectado top 10 usuarios</p>
+		<p class="sub-titulo2">3.3 Tempo total conectado - top 10</p>
 		
 		<h:dataTable value="#{vpnBean.segundosConectadosTop}"
 			var="i" styleClass="default-table" headerClass="default-table-header"
@@ -69,14 +83,12 @@
 
 			<h:column>
 				<f:facet name="header">Tempo</f:facet>
-				<h:outputText value="#{vpnBean.humanReadableTime(i.value)}" />
+				<h:outputText value="#{i.value}" />
 			</h:column>
 
 		</h:dataTable>
 		
-		<p class="sub-titulo2">3.5 Upload total #{vpnBean.humanRedable(vpnBean.upload)}</p>
-		<p class="sub-titulo2">3.6 Upload top 10 usuarios</p>
-		
+		<p class="sub-titulo2">3.4 Upload - top 10</p>
 		<h:dataTable value="#{vpnBean.uploadTop}"
 			var="i" styleClass="default-table" headerClass="default-table-header"
 			rowClasses="default-table-odd-row,default-table-even-row"
@@ -91,14 +103,12 @@
 
 			<h:column>
 				<f:facet name="header">Total</f:facet>
-				<h:outputText value="#{vpnBean.humanRedable(i.value)}" />
+				<h:outputText value="#{i.value}" />
 			</h:column>
 
 		</h:dataTable>
 		
-		<p class="sub-titulo2">3.7 Download total #{vpnBean.humanRedable(vpnBean.download)}</p>
-		<p class="sub-titulo2">3.8 Download top 10 usuarios</p>
-		
+		<p class="sub-titulo2">3.5 Download - top 10</p>
 		<h:dataTable value="#{vpnBean.downloadTop}"
 			var="i" styleClass="default-table" headerClass="default-table-header"
 			rowClasses="default-table-odd-row,default-table-even-row"
@@ -113,7 +123,7 @@
 
 			<h:column>
 				<f:facet name="header">Total</f:facet>
-				<h:outputText value="#{vpnBean.humanRedable(i.value)}" />
+				<h:outputText value="#{i.value}" />
 			</h:column>
 
 		</h:dataTable>
