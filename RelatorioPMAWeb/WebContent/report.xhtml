@@ -38,7 +38,7 @@
 				<ui:include src="relatorio/sql_server_pma_padrao/sumario.xhtml" />
 			</h:panelGroup>
 
-			<h:panelGroup rendered="#{relatorioBean.tipoRelatorioId == 2}">
+			<h:panelGroup rendered="#{relatorioBean.tipoRelatorioId != 1 || relatorioBean.tipoRelatorioId != 3}">
 				<ui:include src="relatorio/iis_pma_padrao/sumario.xhtml" />
 			</h:panelGroup>
 

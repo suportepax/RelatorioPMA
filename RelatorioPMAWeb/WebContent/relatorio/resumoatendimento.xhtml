@@ -119,7 +119,7 @@
 					</h:column>
 				</h:dataTable>
 			</div>
-			<h:panelGroup layout="block" id='tipochamado' rendered="#{relatorioBean.relatorioId} != 41">
+			<h:panelGroup layout="block" id='tipochamado'>
 				<p class="sub-titulo2">2.3 Tipo de Chamados</p>
 				<h:dataTable value="#{atendimentoBean.listaTipoChamado}" var="i"
 					styleClass="default-table" headerClass="default-table-header"
@@ -246,7 +246,7 @@
 					</h:column>
 				</h:dataTable>
 			</div>
-			<h:panelGroup layout="block" id='chamadohost' rendered="#{relatorioBean.relatorioId} != 41">
+			<h:panelGroup layout="block" id='chamadohost'>
 				<h:outputScript library="js" name="jquery.js" target="head" />
 				<h:outputScript library="js" name="jquery.flot.js" target="head" />
 				<h:outputScript library="js" name="jquery.flot.pie.js" target="head" />
