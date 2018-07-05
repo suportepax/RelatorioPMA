@@ -4,54 +4,57 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets">
 	<div id='resumoatendimento' class="quebrapagina">
 		<p class="sub-titulo1">2. Resumo do Atendimento</p>
-		<div id='indicadores'>
-			<div id='sem_parada' class="centro">
-				<h:outputText value="Estamos trabalhando há " class="formato1" />
-				<h:outputText value="#{paradasBean.diasTrabalhados}"
-					class="formato2" />
-				<h:outputText value=" dia(s)" class="formato1" />
-				<br />
-				<h:outputText value="sem paradas operacionais" class="formato1" />
-				<br />
-				<h:outputText
-					value="----------------------------------------------------------------------------------"
-					class="formato1" />
-				<br />
-				<h:outputText value="Evitamos " class="formato1" />
-				<h:outputText value="#{paradasBean.qtdeParadasEvitadasTotal}"
-					class="formato2" />
-				<h:outputText value=" paradas operacionais " class="formato1" />
-				<br />
-				<h:outputText value=" nos últimos " class="formato1" />
-				<h:outputText value="#{paradasBean.diasTrabalhados}"
-					class="formato2" />
-				<h:outputText value=" dias." class="formato1" />
-			</div>
-			
-				<p class="body-subtitulo1">No mês corrente temos:</p>
-			
-			<h:dataTable value="#{paradasBean.listaResumo}" var="i"
-				styleClass="default-table" headerClass="default-table-header"
-				rowClasses="default-table-odd-row,default-table-even-row"
-				footerClass="default-table-footer"
-				columnClasses="celluleLeft,celluleCenter,celluleCenter">
-				<h:column>
-					<f:facet name="header">Tipo</f:facet>
-					<h:outputText value="#{i.tipo}" />
-				</h:column>
-				<h:column>
-					<f:facet name="header">Sigla</f:facet>
-					<h:outputText value="#{i.sigla}" />
-				</h:column>
-				<h:column>
-					<f:facet name="header">Quantidade</f:facet>
-					<h:outputText value="#{i.qtde}" />
-				</h:column>
-			</h:dataTable>
-			<br />
-			<p class="body-subtitulo1">Nos capítulos subsequentes, podemos acompanhar alguns dados estatísticos do atendimento prestado.</p>
+		<h:panelGroup rendered="#{relatorioBean.tipoRelatorioId != 41}">
+			<div id='indicadores'>
+				<div id='sem_parada' class="centro">
+					<h:outputText value="Estamos trabalhando há " class="formato1" />
+					<h:outputText value="#{paradasBean.diasTrabalhados}"
+						class="formato2" />
+					<h:outputText value=" dia(s)" class="formato1" />
+					<br />
+					<h:outputText value="sem paradas operacionais" class="formato1" />
+					<br />
+					<h:outputText
+						value="----------------------------------------------------------------------------------"
+						class="formato1" />
+					<br />
+					<h:outputText value="Evitamos " class="formato1" />
+					<h:outputText value="#{paradasBean.qtdeParadasEvitadasTotal}"
+						class="formato2" />
+					<h:outputText value=" paradas operacionais " class="formato1" />
+					<br />
+					<h:outputText value=" nos últimos " class="formato1" />
+					<h:outputText value="#{paradasBean.diasTrabalhados}"
+						class="formato2" />
+					<h:outputText value=" dias." class="formato1" />
+				</div>
 
-		</div>
+				<p class="body-subtitulo1">No mês corrente temos:</p>
+
+				<h:dataTable value="#{paradasBean.listaResumo}" var="i"
+					styleClass="default-table" headerClass="default-table-header"
+					rowClasses="default-table-odd-row,default-table-even-row"
+					footerClass="default-table-footer"
+					columnClasses="celluleLeft,celluleCenter,celluleCenter">
+					<h:column>
+						<f:facet name="header">Tipo</f:facet>
+						<h:outputText value="#{i.tipo}" />
+					</h:column>
+					<h:column>
+						<f:facet name="header">Sigla</f:facet>
+						<h:outputText value="#{i.sigla}" />
+					</h:column>
+					<h:column>
+						<f:facet name="header">Quantidade</f:facet>
+						<h:outputText value="#{i.qtde}" />
+					</h:column>
+				</h:dataTable>
+				<br />
+				<p class="body-subtitulo1">Nos capítulos subsequentes, podemos
+					acompanhar alguns dados estatísticos do atendimento prestado.</p>
+
+			</div>
+		</h:panelGroup>
 		<div id='chamados'>
 			<p class="sub-titulo2">2.1 Indicadores do Atendimento</p>
 			<h:dataTable value="#{atendimentoBean.listaGeral}" var="i"
@@ -71,7 +74,8 @@
 			<div id='chamadossolicitantes'>
 				<p class="sub-titulo2">2.2 Chamados por Solicitante</p>
 				<br></br>
-				<h:outputText value="Não há chamados no mês corrente." rendered="#{empty atendimentoBean.listaSolicitante}" />
+				<h:outputText value="Não há chamados no mês corrente."
+					rendered="#{empty atendimentoBean.listaSolicitante}" />
 				<h:dataTable value="#{atendimentoBean.listaSolicitante}" var="i"
 					styleClass="default-table" headerClass="default-table-header"
 					rowClasses="default-table-odd-row,default-table-even-row"
@@ -166,12 +170,14 @@
 				</h:dataTable>
 			</h:panelGroup>
 			<div id='chamadoemaberto'>
-				<p class="sub-titulo2">#{relatorioBean.relatorioId != 41 ? 2.3 : 2.4} Chamados em Aberto</p>
+				<p class="sub-titulo2">2.4 Chamados em Aberto</p>
 				<br></br>
-				<h:panelGroup rendered="#{empty atendimentoBean.listaChamadosEmAbertos}">
-					<p class="body-subtitulo2">Não há chamados em aberto no fim do mês corrente.</p>
+				<h:panelGroup
+					rendered="#{empty atendimentoBean.listaChamadosEmAbertos}">
+					<p class="body-subtitulo2">Não há chamados em aberto no fim do
+						mês corrente.</p>
 				</h:panelGroup>
-				
+
 				<h:dataTable value="#{atendimentoBean.listaChamadosEmAbertos}"
 					var="i" styleClass="default-table"
 					headerClass="default-table-header"
@@ -206,9 +212,11 @@
 				</h:dataTable>
 			</div>
 			<div id='chamadofechado'>
-				<p class="sub-titulo2">#{relatorioBean.relatorioId != 41 ? 2.4 : 2.5} Chamados fechados</p>
+				<p class="sub-titulo2">2.5 Chamados fechados</p>
 				<br></br>
-				<h:outputText value="Não há chamados em fechado no fim do mês corrente." rendered="#{empty atendimentoBean.listaChamadosFechados}" />
+				<h:outputText
+					value="Não há chamados em fechado no fim do mês corrente."
+					rendered="#{empty atendimentoBean.listaChamadosFechados}" />
 				<h:dataTable value="#{atendimentoBean.listaChamadosFechados}"
 					var="i" styleClass="default-table"
 					headerClass="default-table-header"
@@ -246,7 +254,7 @@
 					</h:column>
 				</h:dataTable>
 			</div>
-			<h:panelGroup layout="block" id='chamadohost'>
+			<h:panelGroup layout="block" id='chamadohost' rendered="#{relatorioBean.tipoRelatorioId != 41}">
 				<h:outputScript library="js" name="jquery.js" target="head" />
 				<h:outputScript library="js" name="jquery.flot.js" target="head" />
 				<h:outputScript library="js" name="jquery.flot.pie.js" target="head" />
@@ -329,18 +337,22 @@
 				<br />
 				<div id="graficos" class="centro">
 					<div id="graficoesquerda">
-						<div style="padding-right:115px">
+						<div style="padding-right: 115px">
 							<br></br>
-							<h:outputText class="formatodestaque" value="Chamados abertos por servidor" />
-							<br></br><br></br>
+							<h:outputText class="formatodestaque"
+								value="Chamados abertos por servidor" />
+							<br></br>
+							<br></br>
 						</div>
 						<div id="graphHostAbertos" class="graph-med"></div>
 					</div>
 					<div id="graficodireita">
-						<div style="padding-right:115px">
+						<div style="padding-right: 115px">
 							<br></br>
-							<h:outputText class="formatodestaque" value="Chamados fechados por servidor" />
-							<br></br><br></br>
+							<h:outputText class="formatodestaque"
+								value="Chamados fechados por servidor" />
+							<br></br>
+							<br></br>
 						</div>
 						<div id="graphHostFechados" class="graph-med"></div>
 					</div>

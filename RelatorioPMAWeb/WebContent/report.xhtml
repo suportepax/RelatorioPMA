@@ -38,13 +38,20 @@
 				<ui:include src="relatorio/sql_server_pma_padrao/sumario.xhtml" />
 			</h:panelGroup>
 
-			<h:panelGroup rendered="#{relatorioBean.tipoRelatorioId != 1 || relatorioBean.tipoRelatorioId != 3}">
+			<h:panelGroup
+				rendered="#{relatorioBean.tipoRelatorioId != 1 and relatorioBean.tipoRelatorioId != 3}">
 				<ui:include src="relatorio/iis_pma_padrao/sumario.xhtml" />
 			</h:panelGroup>
 
 
 			<ui:include src="relatorio/introducao.xhtml" />
 			<ui:include src="relatorio/resumoatendimento.xhtml" />
+
+			<h:panelGroup rendered="#{relatorioBean.tipoRelatorioId == 41}">
+
+				<ui:include src="/relatorio/vpn.xhtml" />
+
+			</h:panelGroup>
 
 			<h:panelGroup rendered="#{relatorioBean.tipoRelatorioId == 1}">
 
@@ -68,13 +75,7 @@
 
 				<ui:include src="relatorio/iis_pma_padrao/3workload.xhtml" />
 				<ui:include src="relatorio/iis_pma_padrao/resumodeparadas.xhtml" />
-
-			</h:panelGroup>
-			
-			<h:panelGroup rendered="#{relatorioBean.tipoRelatorioId == 41}">
-
-				<ui:include src="/relatorio/vpn.xhtml" />
-
+				
 			</h:panelGroup>
 
 			<ui:include src="relatorio/observacao.xhtml" />

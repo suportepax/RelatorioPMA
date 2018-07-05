@@ -15,12 +15,12 @@
 			rendered="#{!empty vpnBean.estatisticaGeral}">
 
 			<h:column>
-				<f:facet name="header">Acesso mês</f:facet>
+				<f:facet name="header">Usuários ativos no mês</f:facet>
 				<h:outputText value="#{i.acessoMes}" />
 			</h:column>
 
 			<h:column>
-				<f:facet name="header">Sem acesso</f:facet>
+				<f:facet name="header">Usuários inativos no mês</f:facet>
 				<h:outputText value="#{i.semAcesso}" />
 			</h:column>
 			
@@ -46,7 +46,7 @@
 
 		</h:dataTable>
 		
-		<p class="sub-titulo2">3.2 Quantidade acessos mês - top 10</p>
+		<p class="sub-titulo2">3.2 Quantidade de dias acessados no mês - top 10</p>
 		
 		<h:dataTable value="#{vpnBean.acessoUsuariosDia}"
 			var="i" styleClass="default-table" headerClass="default-table-header"

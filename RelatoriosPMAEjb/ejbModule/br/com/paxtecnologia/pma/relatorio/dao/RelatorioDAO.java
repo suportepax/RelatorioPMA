@@ -64,7 +64,7 @@ public class RelatorioDAO {
 		return retorno;
 	}
 
-	public List<RelatorioVO> getListaRelatorioMenu() {
+	public List<RelatorioVO> getListaRelatorioMenu(Boolean sOR) {
 		List<RelatorioVO> retorno = new ArrayList<RelatorioVO>();
 		connection = new DataSourcePMA();
 
@@ -73,7 +73,13 @@ public class RelatorioDAO {
 
 			String sql = "select pj.cliente_display_name || ' / ' || r.display_name menu_entry " + ",r.relatorio_id "
 					+ ",pj.projeto_jira_id " + ",r.nome " + "from rel_relatorios r " + ",rel_projeto_jira pj "
-					+ "where r.projeto_jira_id=pj.projeto_jira_id " + "order by 1";
+					+ "where r.projeto_jira_id=pj.projeto_jira_id ";
+
+			if (sOR == false) {
+				sql += "AND pj.PROJETO_JIRA_ID IN (SELECT DISTINCT cliente_id from PMP_TASK WHERE data_insercao = ADD_MONTHS (TRUNC( sysdate, 'mm'), -1))";
+			}
+			
+			sql += "order by 1";
 			pstmt = connection.getPreparedStatement(sql);
 			ResultSet rs = connection.executaQuery(pstmt);
 

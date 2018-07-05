@@ -14,56 +14,55 @@ public class RelatorioEjb {
 	private RelatorioDAO relatorioDAO = new RelatorioDAO();
 	private List<RelatorioVO> listaRelatorios;
 	private List<MesRelatorioVO> listaMesRelatorio;
-	
-	public List<RelatorioVO> getListaRelatorioMenu(){
 
-			listaRelatorios = relatorioDAO.getListaRelatorioMenu();
+	public List<RelatorioVO> getListaRelatorioMenu(Boolean sOR) {
+
+		listaRelatorios = relatorioDAO.getListaRelatorioMenu(sOR);
 
 		return listaRelatorios;
 	}
-	
+
 	public List<MesRelatorioVO> getListaMes(Integer relatorioId) {
 
 		listaMesRelatorio = relatorioDAO.getListaMes(relatorioId);
-		
+
 		return listaMesRelatorio;
 
 	}
-	
-	public RelatorioVO getRelatorioById(Integer relatorioId, String mesRelatorio){
-		
-		return relatorioDAO.getRelatorioById(relatorioId,mesRelatorio);
+
+	public RelatorioVO getRelatorioById(Integer relatorioId, String mesRelatorio) {
+
+		return relatorioDAO.getRelatorioById(relatorioId, mesRelatorio);
 	}
-	
-	public String getLogoStr(Integer relatorioId){
-		
+
+	public String getLogoStr(Integer relatorioId) {
+
 		return relatorioDAO.getLogoStr(relatorioId);
-		
+
 	}
-	
-	public String getClienteDisplayName(Integer relatorioId){
-		
+
+	public String getClienteDisplayName(Integer relatorioId) {
+
 		return relatorioDAO.getClienteDisplayName(relatorioId);
-		
+
 	}
-	
-	public String getTituloRelatorio(Integer relatorioId){
-		
+
+	public String getTituloRelatorio(Integer relatorioId) {
+
 		return relatorioDAO.getTituloRelatorio(relatorioId);
-		
+
 	}
-	
-	public Integer getProjetoJiraIdByRelatorioId(Integer relatorioId){
-		
+
+	public Integer getProjetoJiraIdByRelatorioId(Integer relatorioId) {
+
 		return relatorioDAO.getProjetoJiraIdByRelatorioId(relatorioId);
-		
+
 	}
-	
-	public Integer getTipoRelatorioIdByRelatorioId(Integer relatorioId){
-		
+
+	public Integer getTipoRelatorioIdByRelatorioId(Integer relatorioId) {
+
 		return relatorioDAO.getTipoRelatorioIdByRelatorioId(relatorioId);
-		
+
 	}
-	
-	
+
 }

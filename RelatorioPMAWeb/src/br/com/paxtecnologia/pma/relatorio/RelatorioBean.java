@@ -32,6 +32,7 @@ public class RelatorioBean {
 	private String clienteDisplayName;
 	private Integer tipoRelatorioId;
 	private RelatorioVO relatorio;
+	private Boolean showOlderReports = false;
 
 	@ManagedProperty(value = "#{observacaoBean}")
 	private ObservacaoBean observacao;
@@ -51,11 +52,13 @@ public class RelatorioBean {
 	public void setUpdate(Boolean update) {
 		this.update = update;
 	}
+	
+	public void updateListaCliente(ValueChangeEvent e) {
+		this.getListaRelatoriosMenu();
+	}
 
 	public List<RelatorioVO> getListaRelatoriosMenu() {
-		if (listaRelatorios == null) {
-			listaRelatorios = relatorioEjb.getListaRelatorioMenu();
-		}
+		listaRelatorios = relatorioEjb.getListaRelatorioMenu(this.getShowOlderReports());
 		return listaRelatorios;
 	}
 
@@ -180,6 +183,14 @@ public class RelatorioBean {
 
 	public void setRelatorio(RelatorioVO relatorio) {
 		this.relatorio = relatorio;
+	}
+
+	public Boolean getShowOlderReports() {
+		return showOlderReports;
+	}
+
+	public void setShowOlderReports(Boolean showOlderReports) {
+		this.showOlderReports = showOlderReports;
 	}
 
 }

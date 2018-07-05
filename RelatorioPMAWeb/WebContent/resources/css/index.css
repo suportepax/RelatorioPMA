@@ -1,0 +1,30 @@
+@CHARSET "UTF-8";
+
+#report {
+	margin-left: 37%;
+	margin-right: 37%;
+}
+
+h1 {
+	font-family: cursive;
+	font-size: 14;
+	text-align: center;
+}
+
+.btn-margin {
+	margin-left: .5%;
+}
+
+.btn-generate {
+	padding: .1%;
+}
+
+#pax {
+	margin-top: 10%;
+	margin-left: 10%;
+	width: 70%;
+}
+
+.oldReports {
+	margin-bottom: 1%;
+}

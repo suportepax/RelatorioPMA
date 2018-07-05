@@ -4,7 +4,7 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets">
 	<div id='observacaoIndex'>
 		<h:panelGroup id="botao">
-			<h:panelGroup rendered="#{relatorioBean.update}">
+			<h:panelGroup rendered="#{relatorioBean.relatorioId != null and relatorioBean.relatorioId != 0}">
 				<h:outputText value="Observação" />
 				<br />
 				<h:inputTextarea value="#{observacaoBean.observacao}" cols="70"
