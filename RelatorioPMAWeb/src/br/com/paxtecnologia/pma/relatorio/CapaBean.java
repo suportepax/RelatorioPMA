@@ -15,8 +15,7 @@ import br.com.paxtecnologia.pma.relatorio.ejb.RelatorioEjb;
 @ManagedBean(name = "capaBean")
 public class CapaBean {
 
-	@EJB
-	private RelatorioEjb relatorioEjb;
+	private RelatorioEjb relatorioEjb = new RelatorioEjb();
 
 	@ManagedProperty(value = "#{relatorioBean.relatorioId}")
 	private Integer relatorioId;

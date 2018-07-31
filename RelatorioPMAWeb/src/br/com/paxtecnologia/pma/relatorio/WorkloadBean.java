@@ -1,12 +1,11 @@
 package br.com.paxtecnologia.pma.relatorio;
 
 import java.io.Serializable;
+import java.util.List;
 
-import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
-import java.util.List;
 
 import br.com.paxtecnologia.pma.relatorio.ejb.WorkloadEjb;
 import br.com.paxtecnologia.pma.relatorio.vo.DBSizeTabelaVO;
@@ -21,8 +20,7 @@ public class WorkloadBean implements Serializable {
 	 */
 	private static final long serialVersionUID = 1L;
 
-	@EJB
-	private WorkloadEjb workloadEjb;
+	private WorkloadEjb workloadEjb = new WorkloadEjb();
 
 	@ManagedProperty(value = "#{clientesBean.idCliente}")
 	private Integer idCliente;

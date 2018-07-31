@@ -1,6 +1,5 @@
 package br.com.paxtecnologia.pma.relatorio;
 
-import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
@@ -13,8 +12,7 @@ import br.com.paxtecnologia.pma.relatorio.ejb.ObservacaoEJB;
 @ManagedBean(name = "observacaoBean")
 public class ObservacaoBean { 
 
-	@EJB
-	ObservacaoEJB observacaoEJB;
+	ObservacaoEJB observacaoEJB = new ObservacaoEJB();
 
 	private String observacao;
 	private Boolean update = null;

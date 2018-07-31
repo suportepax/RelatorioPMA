@@ -2,7 +2,6 @@ package br.com.paxtecnologia.pma.relatorio;
 
 import java.util.List;
 
-import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
@@ -15,8 +14,7 @@ import br.com.paxtecnologia.pma.relatorio.vo2.KeyValue;
 @ManagedBean(name = "vpnBean")
 public class VpnBean {
 
-	@EJB
-	private VpnEJB vpnEJB;
+	private VpnEJB vpnEJB = new VpnEJB();
 
 	@ManagedProperty(value = "#{relatorioBean.projetoJiraId}")
 	private Integer projetoJiraId;

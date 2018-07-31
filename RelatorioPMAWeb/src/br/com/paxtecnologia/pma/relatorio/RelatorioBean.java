@@ -2,7 +2,6 @@ package br.com.paxtecnologia.pma.relatorio;
 
 import java.util.List;
 
-import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
@@ -17,8 +16,7 @@ import br.com.paxtecnologia.pma.relatorio.vo2.RelatorioVO;
 @ManagedBean(name = "relatorioBean")
 public class RelatorioBean {
 
-	@EJB
-	private RelatorioEjb relatorioEjb;
+	private RelatorioEjb relatorioEjb = new RelatorioEjb();
 
 	private Integer relatorioId;
 	private Integer projetoJiraId;

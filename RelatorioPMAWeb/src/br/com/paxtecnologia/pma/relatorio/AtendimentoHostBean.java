@@ -2,7 +2,6 @@ package br.com.paxtecnologia.pma.relatorio;
 
 import java.util.List;
 
-import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
@@ -14,8 +13,7 @@ import br.com.paxtecnologia.pma.relatorio.vo.ChamadoQuantidadeVO;
 @ManagedBean(name = "atendimentoHostBean")
 public class AtendimentoHostBean {
 
-	@EJB
-	private AtendimentoEjb atendimentoEjb;
+	private AtendimentoEjb atendimentoEjb = new AtendimentoEjb();
 
 	@ManagedProperty(value = "#{relatorioBean.projetoJiraId}")
 	private Integer projetoJiraId;

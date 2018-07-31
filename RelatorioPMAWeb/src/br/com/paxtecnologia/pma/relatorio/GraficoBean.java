@@ -3,7 +3,6 @@ package br.com.paxtecnologia.pma.relatorio;
 import java.io.Serializable;
 import java.util.List;
 
-import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
@@ -21,14 +20,11 @@ public class GraficoBean implements Serializable {
 	@ManagedProperty(value = "#{relatorioBean.mesRelatorio}")
 	private String mesRelatorio;
 
-	@EJB 
-	private LinhaValorEjb linhaValorEjb;
+	private LinhaValorEjb linhaValorEjb = new LinhaValorEjb();
 
-	@EJB
-	private GraficoLinhaEjb graficoLinhaEjb;
+	private GraficoLinhaEjb graficoLinhaEjb = new GraficoLinhaEjb();
 	
-	@EJB
-	private GraficoEjb graficoEjb;
+	private GraficoEjb graficoEjb = new GraficoEjb();
 	
 	private Integer diasNoMes;
 	

@@ -2,7 +2,6 @@ package br.com.paxtecnologia.pma.relatorio;
 
 import java.util.List;
 
-import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.event.ValueChangeEvent;
@@ -15,8 +14,7 @@ import br.com.paxtecnologia.pma.relatorio.vo.MesRelatorioVO;
 @SessionScoped
 public class ClientesBean {
 
-	@EJB
-	private ClientesEjb clientesEjb;
+	private ClientesEjb clientesEjb = new ClientesEjb();
 
 	private Integer idCliente;
 	private String mesRelatorio;
