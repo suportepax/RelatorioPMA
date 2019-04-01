@@ -17,16 +17,14 @@ public class VpnDAO {
 		connection = new DataSourcePMA();
 		PreparedStatement pstmt = null;
 		try {
-			String sql = "SELECT * from "
-					+ "(SELECT usuario, count(1) num FROM PAXREL.PMP_FORNAX_VPN group by usuario order by 2 desc) "
-					+ "where rownum <=10";
+			String sql = "SELECT * FROM(SELECT usuario, COUNT( distinct to_char(to_date('01-JAN-1970','dd-mon-yyyy')+(data/60/60/24),'dd')) as dias FROM FORNAX_LOGIN group by usuario order by 2 desc) where rownum <=10";
 			pstmt = connection.getPreparedStatement(sql);
 			ResultSet rs = connection.executaQuery(pstmt);
 			retorno = new ArrayList<KeyValue>();
 			while (rs.next()) {
 				KeyValue kv = new KeyValue();
 				kv.setKey(rs.getString("usuario"));
-				kv.setValue(Double.toString(rs.getDouble("num")));
+				kv.setValue(Double.toString(rs.getDouble("dias")));
 				retorno.add(kv);
 			}
 		} catch (SQLException e) {
@@ -48,16 +46,14 @@ public class VpnDAO {
 		connection = new DataSourcePMA();
 		PreparedStatement pstmt = null;
 		try {
-			String sql = "SELECT * from "
-					+ "(SELECT usuario, SUM (segundos_con) segundos FROM PAXREL.PMP_FORNAX_VPN group by usuario order by 2 desc) "
-					+ "where rownum <=10";
+			String sql = "select * from(select usuario, sum(tempo_conectado) as tempo  FROM FORNAX_LOGOUT group by usuario order by 2 desc) where rownum <=10";
 			pstmt = connection.getPreparedStatement(sql);
 			ResultSet rs = connection.executaQuery(pstmt);
 			retorno = new ArrayList<KeyValue>();
 			while (rs.next()) {
 				KeyValue kv = new KeyValue();
 				kv.setKey(rs.getString("usuario"));
-				kv.setValue(Integer.toString(rs.getInt("segundos")));
+				kv.setValue(Integer.toString(rs.getInt("tempo")));
 				retorno.add(kv);
 			}
 		} catch (SQLException e) {
@@ -79,16 +75,14 @@ public class VpnDAO {
 		connection = new DataSourcePMA();
 		PreparedStatement pstmt = null;
 		try {
-			String sql = "SELECT * from "
-					+ "(SELECT usuario, SUM (download) bytes FROM PAXREL.PMP_FORNAX_VPN group by usuario order by 2 desc) "
-					+ "where rownum <=10";
+			String sql = "select * from(select usuario, sum(bytes_recebidos) as download  FROM FORNAX_LOGOUT group by usuario order by 2 desc) where rownum <=10";
 			pstmt = connection.getPreparedStatement(sql);
 			ResultSet rs = connection.executaQuery(pstmt);
 			retorno = new ArrayList<KeyValue>();
 			while (rs.next()) {
 				KeyValue kv = new KeyValue();
 				kv.setKey(rs.getString("usuario"));
-				kv.setValue(Double.toString(rs.getDouble("bytes")));
+				kv.setValue(Double.toString(rs.getDouble("download")));
 				retorno.add(kv);
 			}
 		} catch (SQLException e) {
@@ -110,16 +104,14 @@ public class VpnDAO {
 		connection = new DataSourcePMA();
 		PreparedStatement pstmt = null;
 		try {
-			String sql = "SELECT * from "
-					+ "(SELECT usuario, SUM (upload) bytes FROM PAXREL.PMP_FORNAX_VPN group by usuario order by 2 desc) "
-					+ "where rownum <=10";
+			String sql = "select * from(select usuario, sum(bytes_enviados) as upload  FROM FORNAX_LOGOUT group by usuario order by 2 desc) where rownum <=10";
 			pstmt = connection.getPreparedStatement(sql);
 			ResultSet rs = connection.executaQuery(pstmt);
 			retorno = new ArrayList<KeyValue>();
 			while (rs.next()) {
 				KeyValue kv = new KeyValue();
 				kv.setKey(rs.getString("usuario"));
-				kv.setValue(Double.toString(rs.getDouble("bytes")));
+				kv.setValue(Double.toString(rs.getDouble("upload")));
 				retorno.add(kv);
 			}
 		} catch (SQLException e) {
